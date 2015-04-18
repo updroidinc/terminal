@@ -1,0 +1,17 @@
+.console {
+  width: 500px;
+  height: 750px;
+  padding: 5px;
+  border: 1px solid #dddddd;
+  font-size: 11px;
+  font-family: "DejaVu Sans Mono", "Liberation Mono", "Andale Mono", monospace;
+  overflow-y: none;
+}
+
+.console:focus {
+  outline: none;
+}
+
+.termrow {
+  height: 14px;
+}
