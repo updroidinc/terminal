@@ -1,4 +1,4 @@
-part of terminal;
+library theme.dart;
 
 /// A class for encapsulating various color themes
 /// for [Terminal];
