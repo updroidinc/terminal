@@ -29,9 +29,9 @@ class Terminal {
   int scrollSpeed = 3;
 
   /// Returns true if cursor blink is enabled.
-  bool get cursorBlink => _cursorBlink;
+  bool get cursorBlink => _controller.cursorBlink;
   /// Enable/disable cursor blink. Default: true
-  void set cursorBlink(bool b) => _setCursorBlink(b);
+  void set cursorBlink(bool b) => _controller.setCursorBlink(b);
 
   /// Returns current [Theme].
   Theme get theme => _theme;
@@ -40,12 +40,10 @@ class Terminal {
 
   // Private
   Model _model;
+  Controller _controller;
   DisplayAttributes _currAttributes;
   Theme _theme;
-  Timer _blinkTimer, _blinkTimeout;
-  bool _blinkOn;
   bool _resizing = false;
-  bool _cursorBlink = true;
 
   static const int ESC = 27;
 
@@ -55,13 +53,11 @@ class Terminal {
 
     _currAttributes = new DisplayAttributes();
     _theme = new Theme.SolarizedDark();
-    _blinkOn = false;
 
     List<int> size = calculateSize();
     _model = new Model(size[0], size[1]);
-    _refreshDisplay();
-
-    _setUpBlink();
+    _controller = new Controller(div, _model, _theme);
+    _controller.refreshDisplay();
 
     _registerEventHandlers();
   }
@@ -97,31 +93,7 @@ class Terminal {
     _theme = thm;
     div.style.backgroundColor = _theme.backgroundColor;
     div.style.color = _theme.colors['white'];
-    _refreshDisplay();
-  }
-
-  void _setCursorBlink(bool b) {
-    _cursorBlink = b;
-
-    _cancelBlink();
-    _setUpBlink();
-    _refreshDisplay();
-  }
-
-  void _setUpBlink() {
-    if (!_cursorBlink) return;
-
-    _blinkTimeout = new Timer(new Duration(milliseconds: 1000), () {
-      _blinkTimer = new Timer.periodic(new Duration(milliseconds: 500), (timer) {
-        _blinkOn = !_blinkOn;
-        _refreshDisplay();
-      });
-    });
-  }
-
-  void _cancelBlink() {
-    if (_blinkTimeout != null) _blinkTimeout.cancel();
-    if (_blinkTimer != null) _blinkTimer.cancel();
+    _controller.refreshDisplay();
   }
 
   void _registerEventHandlers() {
@@ -138,9 +110,9 @@ class Terminal {
       wheelEvent.preventDefault();
 
       cursorBlink = (_model.atBottom) ? true : false;
-     _blinkOn = false;
+     _controller.blinkOn = false;
       (wheelEvent.deltaY < 0) ? _model.scrollUp(scrollSpeed) : _model.scrollDown(scrollSpeed);
-      _refreshDisplay();
+      _controller.refreshDisplay();
     });
 
     div.onPaste.listen((e) {
@@ -155,10 +127,10 @@ class Terminal {
   void _handleInput(KeyboardEvent e) {
     // Deactivate blinking while the user is typing.
     // Reactivate after an idle period.
-    _cancelBlink();
-    _blinkOn = true;
+    _controller.cancelBlink();
+    _controller.blinkOn = true;
     _model.scrollToBottom();
-    _setUpBlink();
+    _controller.setUpBlink();
 
     int key = e.keyCode;
 
@@ -221,7 +193,7 @@ class Terminal {
 
       bool escapeHandled = EscapeHandler.handleEscape(escape, _model, _currAttributes);
       if (escapeHandled) {
-        _refreshDisplay();
+        _controller.refreshDisplay();
         break;
       }
     }
@@ -269,59 +241,6 @@ class Terminal {
       _model.cursorForward();
     }
 
-    _refreshDisplay();
-  }
-
-  /// Generates the HTML for an individual row given
-  /// the [Glyph]s contained in the model at that
-  /// corresponding row.
-  DivElement _generateRow(int r) {
-    Glyph prev, curr;
-
-    DivElement row = new DivElement();
-    String str = '';
-    prev = _model.getGlyphAt(r, 0);
-    for (int c = 0; c < _model.numCols; c++) {
-      curr = _model.getGlyphAt(r, c);
-
-      if (!curr.hasSameAttributes(prev) || c == _model.numCols - 1) {
-        if (prev.hasDefaults()) {
-          row.append(new DocumentFragment.html(str));
-        } else {
-          SpanElement span = new SpanElement();
-          span.style.color = _theme.colors[prev.fgColor];
-          span.style.backgroundColor = _theme.colors[prev.bgColor];
-          span.append(new DocumentFragment.html(str));
-          row.append(span);
-        }
-
-        str = '';
-      }
-
-      // Draw the cursor.
-      if (_model.cursor.row == r && _model.cursor.col == c && _blinkOn) {
-        str += Glyph.CURSOR;
-      } else {
-        str += curr.value;
-      }
-
-      prev = curr;
-    }
-
-    return row;
-  }
-
-  /// Refreshes the entire console [DivElement] by setting its
-  /// contents to null and regenerating each row [DivElement].
-  void _refreshDisplay() {
-    div.innerHtml = '';
-
-    DivElement row;
-    for (int r = 0; r < _model.numRows; r++) {
-      row = _generateRow(r);
-      row.classes.add('termrow');
-
-      div.append(row);
-    }
+    _controller.refreshDisplay();
   }
 }
