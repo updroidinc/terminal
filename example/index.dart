@@ -15,6 +15,7 @@ void main() {
 
   initWebSocket('ws://localhost:12061/pty');
 
+  // Terminal input.
   term.stdin.stream.listen((data) {
     ws.sendByteBuffer(new Uint8List.fromList(data).buffer);
   });
@@ -27,26 +28,27 @@ void initWebSocket(String url, [int retrySeconds = 2]) {
     ws.binaryType = "arraybuffer";
 
     ws.onOpen.listen((e) {
-      print('Console-$num connected to server with status ${ws.readyState}.');
+      print('Terminal connected to server with status ${ws.readyState}.');
     });
 
+    // Terminal output.
     ws.onMessage.listen((e) {
       ByteBuffer buf = e.data;
       term.stdout.add(buf.asUint8List());
     });
 
     ws.onClose.listen((e) {
-      print('Console-$num disconnected due to CLOSE. Retrying...');
+      print('Terminal disconnected due to CLOSE. Retrying...');
       if (!encounteredError) {
-        new Timer(new Duration(seconds:retrySeconds), () => initWebSocket(url, retrySeconds * 2));
+        new Timer(new Duration(seconds:retrySeconds), () => initWebSocket(url, 4));
       }
       encounteredError = true;
     });
 
     ws.onError.listen((e) {
-      print('Console-$num disconnected due to ERROR. Retrying...');
+      print('Terminal disconnected due to ERROR. Retrying...');
       if (!encounteredError) {
-        new Timer(new Duration(seconds:retrySeconds), () => initWebSocket(url, retrySeconds * 2));
+        new Timer(new Duration(seconds:retrySeconds), () => initWebSocket(url, 4));
       }
       encounteredError = true;
     });
