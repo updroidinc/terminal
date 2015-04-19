@@ -1,4 +1,4 @@
-part of terminal;
+part of model;
 
 class EscapeHandler {
   // Taken from: http://www.termsys.demon.co.uk/vtansi.htm

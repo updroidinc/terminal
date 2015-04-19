@@ -3,14 +3,9 @@ library terminal;
 import 'dart:html';
 import 'dart:async';
 import 'dart:convert';
-import 'package:quiver/core.dart';
 
-part 'lib/model/model.dart';
-part 'lib/model/glyph.dart';
-part 'lib/model/display_attributes.dart';
-part 'lib/input_keys.dart';
-part 'lib/theme.dart';
-part 'lib/escape_handler.dart';
+import 'theme.dart';
+import 'package:terminal/src/model.dart';
 
 /// A class for rendering a terminal emulator in a [DivElement] (param).
 /// [stdout] needs to receive individual UTF8 integers and will handle

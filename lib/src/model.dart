@@ -1,4 +1,12 @@
-part of terminal;
+library model;
+
+import 'dart:convert';
+import 'package:quiver/core.dart';
+
+part 'display_attributes.dart';
+part 'escape_handler.dart';
+part 'glyph.dart';
+part 'input_keys.dart';
 
 class Cursor {
   int row = 0;

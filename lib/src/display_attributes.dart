@@ -1,4 +1,4 @@
-part of terminal;
+part of model;
 
 /// Holds the current state of [Terminal] display attributes.
 class DisplayAttributes {

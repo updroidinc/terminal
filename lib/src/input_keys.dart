@@ -1,4 +1,4 @@
-part of terminal;
+part of model;
 
 // A map of Dart keyCodes (whatever they really are)
 // to UTF8 integers of their Shift equivalents.
