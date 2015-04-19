@@ -314,11 +314,6 @@ class Terminal {
   /// Refreshes the entire console [DivElement] by setting its
   /// contents to null and regenerating each row [DivElement].
   void _refreshDisplay() {
-    // Don't try to draw the display if the enclosing tab is
-    // inactive (where the content div is dimensionless).
-    //print(div.parent.parent.classes.toString());
-    if (!div.parent.parent.classes.contains('active')) return;
-
     div.innerHtml = '';
 
     DivElement row;
