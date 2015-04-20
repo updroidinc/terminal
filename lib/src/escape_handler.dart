@@ -9,10 +9,7 @@ class EscapeHandler {
     JSON.encode([27, 91, 48, 99]): 'Query Device Code',
     JSON.encode([27, 90]): 'Query Device Code',
     JSON.encode([27, 91, 53, 110]): 'Query Device Status',
-    JSON.encode([27, 91, 48, 110]): 'Report Device OK',
-    JSON.encode([27, 91, 51, 110]): 'Report Device Failure',
     JSON.encode([27, 91, 54, 110]): 'Query Cursor Position',
-    JSON.encode([27, 91, 53, 110]): 'Report Cursor Position',
     // Terminal Setup
     JSON.encode([27, 99]): 'Reset Device',
     JSON.encode([27, 55, 104]): 'Enable Line Wrap',
