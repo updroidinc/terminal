@@ -120,19 +120,19 @@ class EscapeHandler {
         _queryCursorPosition(stdin, model);
         break;
       case 'Set Tab':
-        _setTab(model);
+        model.setTab();
         break;
       case 'Clear All Tabs':
-        _clearAllTabs(model);
+        model.clearAllTabs();
         break;
       case 'Erase End of Line':
         _eraseEndOfLine(model, currAttributes);
         break;
       case 'Erase Down':
-        _eraseDown(model);
+        model.eraseDown();
         break;
       case 'Erase Screen':
-        _eraseScreen(model);
+        model.eraseScreen();
         break;
       case 'Keypad Application':
         model.setKeypadMode(KeypadMode.APPLICATION);
@@ -148,22 +148,6 @@ class EscapeHandler {
   static void _queryCursorPosition(StreamController<List<int>> stdin, Model model) {
     // Sends back a Report Cursor Position - <ESC>[{ROW};{COLUMN}R
     stdin.add([27, 91, model.cursor.row, 59, model.cursor.col, 82]);
-  }
-
-  static void _setTab(Model model) {
-    model.setTab();
-  }
-
-  static void _clearAllTabs(Model model) {
-    model.clearAllTabs();
-  }
-
-  static void _eraseDown(Model model) {
-    model.eraseDown();
-  }
-
-  static void _eraseScreen(Model model) {
-    model.eraseScreen();
   }
 
   static void _setMode(List<int> escape) {
