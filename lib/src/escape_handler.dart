@@ -88,7 +88,7 @@ class EscapeHandler {
   }
 
   static void _handleVariableEscape(String encodedEscape, List<int> escape, DisplayAttributes currAttributes, Model model) {
-    //print('Variable escape: ${EscapeHandler.variableEscapeTerminators[escape.last]}');
+    print('Variable escape: ${EscapeHandler.variableEscapeTerminators[escape.last]}');
     switch (EscapeHandler.variableEscapeTerminators[escape.last]) {
       case 'Set Attribute Mode':
         _setAttributeMode(escape, currAttributes);
@@ -114,7 +114,7 @@ class EscapeHandler {
   }
 
   static void _handleConstantEscape(String encodedEscape, StreamController<List<int>> stdin, Model model, DisplayAttributes currAttributes, List<int> escape) {
-    //print('Constant escape: ${constantEscapes[encodedEscape]}');
+    print('Constant escape: ${constantEscapes[encodedEscape]}');
     switch (constantEscapes[encodedEscape]) {
       case 'Query Cursor Position':
         _queryCursorPosition(stdin, model);
@@ -151,21 +151,18 @@ class EscapeHandler {
   }
 
   static void _setMode(List<int> escape) {
-    if (JSON.encode(escape) == '[27, 91, 63, 49, 104]') {
-      print('setMode: not yet supported');
-    }
+    print('Set Mode: ${escape.toString()}');
   }
 
   static void _resetMode(List<int> escape) {
-    if (JSON.encode(escape) == '[27, 91, 63, 49, 108]') {
-      print('resetMode: not yet supported');
-    }
+    print('Reset Mode: ${escape.toString()}');
   }
 
   static void _scrollScreen(List<int> escape) {
     int indexOfSemi = escape.indexOf(59);
     int start = int.parse(UTF8.decode(escape.sublist(2, indexOfSemi)));
     int end = int.parse(UTF8.decode(escape.sublist(indexOfSemi + 1, escape.length - 1)));
+    print('Scrolling: $start to $end');
   }
 
   /// Sets the cursor position where subsequent text will begin.
