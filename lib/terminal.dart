@@ -157,7 +157,36 @@ class Terminal {
     if (key == 13) {
       key = 10;
     } else if (key == 38) {
-      stdin.add([27, 91, 65]);
+      // Up Arrow
+      if (_model.cursorkeys == CursorkeysMode.NORMAL) {
+        stdin.add([27, 91, 65]);
+      } else {
+        stdin.add([27, 48, 65]);
+      }
+      return;
+    } else if (key == 40) {
+      // Down Arrow
+      if (_model.cursorkeys == CursorkeysMode.NORMAL) {
+        stdin.add([27, 91, 66]);
+      } else {
+        stdin.add([27, 48, 66]);
+      }
+      return;
+    } else if (key == 37) {
+      // Left Arrow
+      if (_model.cursorkeys == CursorkeysMode.NORMAL) {
+        stdin.add([27, 91, 68]);
+      } else {
+        stdin.add([27, 48, 68]);
+      }
+      return;
+    } else if (key == 39) {
+      // Right Arrow
+      if (_model.cursorkeys == CursorkeysMode.NORMAL) {
+        stdin.add([27, 91, 67]);
+      } else {
+        stdin.add([27, 48, 67]);
+      }
       return;
     }
 

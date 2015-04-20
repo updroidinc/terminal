@@ -22,6 +22,7 @@ class Cursor {
 }
 
 enum KeypadMode { NUMERIC, APPLICATION }
+enum CursorkeysMode { NORMAL, APPLICATION }
 
 /// Represents the data model for [Terminal].
 class Model {
@@ -32,6 +33,7 @@ class Model {
   Cursor cursor;
   int numRows, numCols;
   KeypadMode keypad;
+  CursorkeysMode cursorkeys;
 
   // Implemented as stacks in scrolling.
   List<List> _reverseBuffer;
@@ -46,6 +48,7 @@ class Model {
   Model (this.numRows, this.numCols) {
     cursor = new Cursor();
     keypad = KeypadMode.NUMERIC;
+    cursorkeys = CursorkeysMode.NORMAL;
 
     _reverseBuffer = [];
     _forwardBuffer = [];

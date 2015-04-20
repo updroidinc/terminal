@@ -104,10 +104,10 @@ class EscapeHandler {
         _cursorForward(model);
         break;
       case 'Set Mode':
-        _setMode(escape);
+        _setMode(escape, model);
         break;
       case 'Reset Mode':
-        _resetMode(escape);
+        _resetMode(escape, model);
         break;
       case 'Scroll Screen':
         _scrollScreen(escape);
@@ -154,12 +154,26 @@ class EscapeHandler {
     stdin.add([27, 91, model.cursor.row, 59, model.cursor.col, 82]);
   }
 
-  static void _setMode(List<int> escape) {
-    print('Set Mode: ${escape.toString()}');
+  static void _setMode(List<int> escape, Model model) {
+    print('Set Mode: ${printEsc(escape)}');
+    switch (printEsc(escape)) {
+      case '<ESC>[?1h':
+        model.cursorkeys = CursorkeysMode.APPLICATION;
+        break;
+      default:
+        print('Set Mode: ${printEsc(escape)} not yet supported');
+    }
   }
 
-  static void _resetMode(List<int> escape) {
-    print('Reset Mode: ${escape.toString()}');
+  static void _resetMode(List<int> escape, Model model) {
+    print('Reset Mode: ${printEsc(escape)}');
+    switch (printEsc(escape)) {
+      case '<ESC>[?1l':
+        model.cursorkeys = CursorkeysMode.NORMAL;
+        break;
+      default:
+        print('Reset Mode: ${printEsc(escape)} not yet supported');
+    }
   }
 
   static void _scrollScreen(List<int> escape) {
