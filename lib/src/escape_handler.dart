@@ -77,65 +77,72 @@ class EscapeHandler {
 
     String encodedEscape = JSON.encode(escape);
     if (constantEscapes.containsKey(encodedEscape)) {
-      switch (constantEscapes[encodedEscape]) {
-        case 'Query Cursor Position':
-          _queryCursorPosition(stdin, model);
-          break;
-        case 'Set Tab':
-          _setTab(model);
-          break;
-        case 'Clear All Tabs':
-          _clearAllTabs(model);
-          break;
-        case 'Erase End of Line':
-          _eraseEndOfLine(model, currAttributes);
-          break;
-        case 'Erase Down':
-          _eraseDown(model);
-          break;
-        case 'Erase Screen':
-          _eraseScreen(model);
-          break;
-        case 'Keypad Application':
-          model.setKeypadMode(KeypadMode.APPLICATION);
-          break;
-        case 'Keypad Numeric':
-          model.setKeypadMode(KeypadMode.NUMERIC);
-          break;
-        default:
-          print('Constant escape : ${constantEscapes[encodedEscape]} (${escape.toString()}) not yet supported');
-      }
+      _handleConstantEscape(encodedEscape, stdin, model, currAttributes, escape);
       return true;
-    }
-
-    if (variableEscapeTerminators.containsKey(escape.last)) {
-      switch (EscapeHandler
-              .variableEscapeTerminators[escape.last]) {
-        case 'Set Attribute Mode':
-          _setAttributeMode(escape, currAttributes);
-          break;
-        case 'Cursor Home':
-          _cursorHome(escape, model);
-          break;
-        case 'Cursor Forward':
-          _cursorForward(model);
-          break;
-        case 'Set Mode':
-          _setMode(escape);
-          break;
-        case 'Reset Mode':
-          _resetMode(escape);
-          break;
-        case 'Scroll Screen':
-          _scrollScreen(escape);
-          break;
-        default:
-          print('Variable escape : ${variableEscapeTerminators[escape.last]} (${escape.toString()}) not yet supported');
-      }
+    } else if (variableEscapeTerminators.containsKey(escape.last)) {
+      _handleVariableEscape(encodedEscape, escape, currAttributes, model);
       return true;
     }
 
     return false;
+  }
+
+  static void _handleVariableEscape(String encodedEscape, List<int> escape, DisplayAttributes currAttributes, Model model) {
+    //print('Variable escape: ${EscapeHandler.variableEscapeTerminators[escape.last]}');
+    switch (EscapeHandler.variableEscapeTerminators[escape.last]) {
+      case 'Set Attribute Mode':
+        _setAttributeMode(escape, currAttributes);
+        break;
+      case 'Cursor Home':
+        _cursorHome(escape, model);
+        break;
+      case 'Cursor Forward':
+        _cursorForward(model);
+        break;
+      case 'Set Mode':
+        _setMode(escape);
+        break;
+      case 'Reset Mode':
+        _resetMode(escape);
+        break;
+      case 'Scroll Screen':
+        _scrollScreen(escape);
+        break;
+      default:
+        print('Variable escape : ${variableEscapeTerminators[escape.last]} (${escape.toString()}) not yet supported');
+    }
+  }
+
+  static void _handleConstantEscape(String encodedEscape, StreamController<List<int>> stdin, Model model, DisplayAttributes currAttributes, List<int> escape) {
+    //print('Constant escape: ${constantEscapes[encodedEscape]}');
+    switch (constantEscapes[encodedEscape]) {
+      case 'Query Cursor Position':
+        _queryCursorPosition(stdin, model);
+        break;
+      case 'Set Tab':
+        _setTab(model);
+        break;
+      case 'Clear All Tabs':
+        _clearAllTabs(model);
+        break;
+      case 'Erase End of Line':
+        _eraseEndOfLine(model, currAttributes);
+        break;
+      case 'Erase Down':
+        _eraseDown(model);
+        break;
+      case 'Erase Screen':
+        _eraseScreen(model);
+        break;
+      case 'Keypad Application':
+        model.setKeypadMode(KeypadMode.APPLICATION);
+        break;
+      case 'Keypad Numeric':
+        model.setKeypadMode(KeypadMode.NUMERIC);
+        break;
+      default:
+        print('Constant escape : ${constantEscapes[encodedEscape]} (${escape.toString()}) not yet supported');
+    }
   }
 
   static void _queryCursorPosition(StreamController<List<int>> stdin, Model model) {
