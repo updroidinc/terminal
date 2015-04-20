@@ -136,6 +136,17 @@ class Model {
     }
   }
 
+  void eraseScreen() {
+    for (List<Glyph> r in _frame) {
+      for (int c = 0; c < r.length; c++) {
+        r[c].value = Glyph.SPACE;
+      }
+    }
+
+    cursor.row = 0;
+    cursor.col = 0;
+  }
+
   void _pushBuffer() {
     _reverseBuffer.add(_frame[0]);
     if (_reverseBuffer.length > _MAXBUFFER) _reverseBuffer.removeAt(0);

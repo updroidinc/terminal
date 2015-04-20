@@ -192,7 +192,7 @@ class Terminal {
       termIndex = i;
       escape = output.sublist(0, i);
 
-      bool escapeHandled = EscapeHandler.handleEscape(escape, _model, _currAttributes);
+      bool escapeHandled = EscapeHandler.handleEscape(escape, stdin, _model, _currAttributes);
       if (escapeHandled) {
         _controller.refreshDisplay();
         break;

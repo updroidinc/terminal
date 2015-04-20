@@ -2,9 +2,12 @@ part of model;
 
 class EscapeHandler {
   // Taken from: http://www.termsys.demon.co.uk/vtansi.htm
+  // And for VT102: http://www.ibiblio.org/pub/historic-linux/ftp-archives/tsx-11.mit.edu/Oct-07-1996/info/vt102.codes
   static Map constantEscapes = {
     // Device Status
     JSON.encode([27, 91, 99]): 'Query Device Code',
+    JSON.encode([27, 91, 48, 99]): 'Query Device Code',
+    JSON.encode([27, 90]): 'Query Device Code',
     JSON.encode([27, 91, 53, 110]): 'Query Device Status',
     JSON.encode([27, 91, 48, 110]): 'Report Device OK',
     JSON.encode([27, 91, 51, 110]): 'Report Device Failure',
@@ -66,7 +69,7 @@ class EscapeHandler {
     108: 'Reset Mode'
   };
 
-  static bool handleEscape(List<int> escape, Model model, DisplayAttributes currAttributes) {
+  static bool handleEscape(List<int> escape, StreamController<List<int>> stdin, Model model, DisplayAttributes currAttributes) {
     if (escape.length != 1 && escape.last == 27) {
       print('Unknown escape detected: ${escape.sublist(0, escape.length - 1).toString()}');
       return true;
@@ -75,11 +78,17 @@ class EscapeHandler {
     String encodedEscape = JSON.encode(escape);
     if (constantEscapes.containsKey(encodedEscape)) {
       switch (constantEscapes[encodedEscape]) {
+        case 'Query Cursor Position':
+          _queryCursorPosition(stdin, model);
+          break;
         case 'Erase End of Line':
           _eraseEndOfLine(model, currAttributes);
           break;
         case 'Erase Down':
           _eraseDown(model);
+          break;
+        case 'Erase Screen':
+          _eraseScreen(model);
           break;
         default:
           print('Constant escape : ${constantEscapes[encodedEscape]} (${escape.toString()}) not yet supported');
@@ -117,8 +126,17 @@ class EscapeHandler {
     return false;
   }
 
+  static void _queryCursorPosition(StreamController<List<int>> stdin, Model model) {
+    // Sends back a Report Cursor Position - <ESC>[{ROW};{COLUMN}R
+    stdin.add([27, 91, model.cursor.row, 59, model.cursor.col, 82]);
+  }
+
   static void _eraseDown(Model model) {
     model.eraseDown();
+  }
+
+  static void _eraseScreen(Model model) {
+    model.eraseScreen();
   }
 
   static void _setMode(List<int> escape) {
