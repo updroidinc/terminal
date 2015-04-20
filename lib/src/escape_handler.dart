@@ -69,9 +69,13 @@ class EscapeHandler {
     108: 'Reset Mode'
   };
 
+  static String printEsc(List<int> escape) {
+    return '<ESC>' + UTF8.decode(escape.sublist(1));
+  }
+
   static bool handleEscape(List<int> escape, StreamController<List<int>> stdin, Model model, DisplayAttributes currAttributes) {
     if (escape.length != 1 && escape.last == 27) {
-      print('Unknown escape detected: ${escape.sublist(0, escape.length - 1).toString()}');
+      print('Unknown escape detected: ${printEsc(escape.sublist(0, escape.length - 1))}');
       return true;
     }
 
@@ -88,7 +92,7 @@ class EscapeHandler {
   }
 
   static void _handleVariableEscape(String encodedEscape, List<int> escape, DisplayAttributes currAttributes, Model model) {
-    print('Variable escape: ${EscapeHandler.variableEscapeTerminators[escape.last]}');
+    print('Variable escape: ${EscapeHandler.variableEscapeTerminators[escape.last]} ${printEsc(escape)}');
     switch (EscapeHandler.variableEscapeTerminators[escape.last]) {
       case 'Set Attribute Mode':
         _setAttributeMode(escape, currAttributes);
@@ -114,7 +118,7 @@ class EscapeHandler {
   }
 
   static void _handleConstantEscape(String encodedEscape, StreamController<List<int>> stdin, Model model, DisplayAttributes currAttributes, List<int> escape) {
-    print('Constant escape: ${constantEscapes[encodedEscape]}');
+    print('Constant escape: ${constantEscapes[encodedEscape]} ${printEsc(escape)}');
     switch (constantEscapes[encodedEscape]) {
       case 'Query Cursor Position':
         _queryCursorPosition(stdin, model);
