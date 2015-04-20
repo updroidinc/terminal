@@ -30,6 +30,9 @@ class EscapeHandler {
     JSON.encode([27, 72]): 'Set Tab',
     JSON.encode([27, 91, 103]): 'Clear Tab',
     JSON.encode([27, 91, 51, 103]): 'Clear All Tabs',
+    // Keypad Character Selection
+    JSON.encode([27, 61]): 'Keypad Application',
+    JSON.encode([27, 62]): 'Keypad Numeric',
     // Erasing Text
     JSON.encode([27, 91, 75]): 'Erase End of Line',
     JSON.encode([27, 91, 49, 75]): 'Erase Start of Line',
@@ -78,6 +81,12 @@ class EscapeHandler {
         case 'Query Cursor Position':
           _queryCursorPosition(stdin, model);
           break;
+        case 'Set Tab':
+          _setTab(model);
+          break;
+        case 'Clear All Tabs':
+          _clearAllTabs(model);
+          break;
         case 'Erase End of Line':
           _eraseEndOfLine(model, currAttributes);
           break;
@@ -86,6 +95,12 @@ class EscapeHandler {
           break;
         case 'Erase Screen':
           _eraseScreen(model);
+          break;
+        case 'Keypad Application':
+          model.setKeypadMode(KeypadMode.APPLICATION);
+          break;
+        case 'Keypad Numeric':
+          model.setKeypadMode(KeypadMode.NUMERIC);
           break;
         default:
           print('Constant escape : ${constantEscapes[encodedEscape]} (${escape.toString()}) not yet supported');
@@ -126,6 +141,14 @@ class EscapeHandler {
   static void _queryCursorPosition(StreamController<List<int>> stdin, Model model) {
     // Sends back a Report Cursor Position - <ESC>[{ROW};{COLUMN}R
     stdin.add([27, 91, model.cursor.row, 59, model.cursor.col, 82]);
+  }
+
+  static void _setTab(Model model) {
+    model.setTab();
+  }
+
+  static void _clearAllTabs(Model model) {
+    model.clearAllTabs();
   }
 
   static void _eraseDown(Model model) {

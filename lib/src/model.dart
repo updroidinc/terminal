@@ -21,6 +21,8 @@ class Cursor {
   }
 }
 
+enum KeypadMode { NUMERIC, APPLICATION }
+
 /// Represents the data model for [Terminal].
 class Model {
   static const int _MAXBUFFER = 500;
@@ -29,6 +31,7 @@ class Model {
 
   Cursor cursor;
   int numRows, numCols;
+  KeypadMode keypad;
 
   // Implemented as stacks in scrolling.
   List<List> _reverseBuffer;
@@ -37,8 +40,12 @@ class Model {
   // Implemented as a queue in scrolling.
   List<List> _frame;
 
+  // Tab locations.
+  List<List> _tabs;
+
   Model (this.numRows, this.numCols) {
     cursor = new Cursor();
+    keypad = KeypadMode.NUMERIC;
 
     _reverseBuffer = [];
     _forwardBuffer = [];
@@ -127,6 +134,14 @@ class Model {
     }
   }
 
+  void setTab() {
+    _tabs.add([cursor.row, cursor.col]);
+  }
+
+  void clearAllTabs() {
+    _tabs.clear();
+  }
+
   void eraseDown() {
     int cursorRow = cursor.row;
     for (List<Glyph> r in _frame.sublist(cursorRow)) {
@@ -145,6 +160,10 @@ class Model {
 
     cursor.row = 0;
     cursor.col = 0;
+  }
+
+  void setKeypadMode(KeypadMode mode) {
+    keypad = mode;
   }
 
   void _pushBuffer() {
