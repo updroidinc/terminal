@@ -43,7 +43,8 @@ class Terminal {
   Controller _controller;
   DisplayAttributes _currAttributes;
   Theme _theme;
-  bool _resizing = false;
+
+  bool _resizing;
 
   static const int ESC = 27;
 
@@ -54,12 +55,19 @@ class Terminal {
     _currAttributes = new DisplayAttributes();
     _theme = new Theme.SolarizedDark();
 
-    List<int> size = calculateSize();
+    List<int> size = _calculateSize();
     _model = new Model(size[0], size[1]);
     _controller = new Controller(div, _model, _theme);
+
+    _resizing = false;
+
     _controller.refreshDisplay();
 
     _registerEventHandlers();
+  }
+
+  List<int> currentSize() {
+    return [_model.numRows, _model.numCols];
   }
 
   void resize(int newRows, int newCols) {
@@ -72,7 +80,7 @@ class Terminal {
     stdin.add([10]);
   }
 
-  List<int> calculateSize() {
+  List<int> _calculateSize() {
     int rows = (div.borderEdge.height - 10) ~/ charHeight;
     int cols = (div.borderEdge.width - 10) ~/ charWidth;
 
@@ -83,10 +91,6 @@ class Terminal {
     }
 
     return [rows, cols];
-  }
-
-  List<int> currentSize() {
-    return [_model.numRows, _model.numCols];
   }
 
   void _setTheme(Theme thm) {
