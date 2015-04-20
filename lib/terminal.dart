@@ -11,9 +11,6 @@ import 'package:terminal/src/model.dart';
 /// [stdout] needs to receive individual UTF8 integers and will handle
 /// them appropriately.
 class Terminal {
-  static double charWidth = 6.778;
-  static int charHeight = 14;
-
   /// The [DivElement] within which all [Terminal] graphical elements
   /// are rendered.
   DivElement div;
@@ -81,8 +78,8 @@ class Terminal {
   }
 
   List<int> _calculateSize() {
-    int rows = (div.borderEdge.height - 10) ~/ charHeight;
-    int cols = (div.borderEdge.width - 10) ~/ charWidth;
+    int rows = (div.borderEdge.height - 10) ~/ _theme.charHeight;
+    int cols = (div.borderEdge.width - 10) ~/ _theme.charWidth;
 
     // Set a default if the calculated size is unusable.
     if (rows < 10 || cols < 10) {

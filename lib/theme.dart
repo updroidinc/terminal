@@ -7,6 +7,10 @@ class Theme {
   Map colors;
   String backgroundColor;
 
+  // Manually calculated via trial-and-error.
+  double charWidth = 6.778;
+  int charHeight = 14;
+
   Theme.SolarizedDark() {
     name = 'solarized-dark';
     colors = {
