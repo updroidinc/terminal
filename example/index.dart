@@ -13,6 +13,9 @@ void main() {
     ..cursorBlink = true
     ..theme = new Theme.SolarizedDark();
 
+  List<int> size = term.currentSize();
+  print('Terminal spawned with size: ${size[0]} x ${size[1]}');
+
   initWebSocket('ws://localhost:12061/pty');
 
   // Terminal input.
