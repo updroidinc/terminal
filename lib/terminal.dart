@@ -79,7 +79,7 @@ class Terminal {
 
   List<int> _calculateSize() {
     int rows = (div.contentEdge.height) ~/ _theme.charHeight;
-    int cols = (div.contentEdge.width) ~/ _theme.charWidth;
+    int cols = (div.contentEdge.width) ~/ _theme.charWidth + 1;
 
     // Set a default if the calculated size is unusable.
     if (rows < 10 || cols < 10) {
