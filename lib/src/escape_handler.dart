@@ -91,6 +91,38 @@ class EscapeHandler {
     return false;
   }
 
+  static void _handleConstantEscape(String encodedEscape, StreamController<List<int>> stdin, Model model, DisplayAttributes currAttributes, List<int> escape) {
+    //print('Constant escape: ${constantEscapes[encodedEscape]} ${printEsc(escape)}');
+    switch (constantEscapes[encodedEscape]) {
+      case 'Query Cursor Position':
+        _queryCursorPosition(stdin, model);
+        break;
+      case 'Set Tab':
+        model.setTab();
+        break;
+      case 'Clear All Tabs':
+        model.clearAllTabs();
+        break;
+      case 'Erase End of Line':
+        model.eraseEndOfLine();
+        break;
+      case 'Erase Down':
+        model.eraseDown();
+        break;
+      case 'Erase Screen':
+        model.eraseScreen();
+        break;
+      case 'Keypad Application':
+        model.setKeypadMode(KeypadMode.APPLICATION);
+        break;
+      case 'Keypad Numeric':
+        model.setKeypadMode(KeypadMode.NUMERIC);
+        break;
+      default:
+        print('Constant escape : ${constantEscapes[encodedEscape]} (${escape.toString()}) not yet supported');
+    }
+  }
+
   static void _handleVariableEscape(String encodedEscape, List<int> escape, DisplayAttributes currAttributes, Model model) {
     //print('Variable escape: ${EscapeHandler.variableEscapeTerminators[escape.last]} ${printEsc(escape)}');
     switch (EscapeHandler.variableEscapeTerminators[escape.last]) {
@@ -123,38 +155,6 @@ class EscapeHandler {
         break;
       default:
         print('Variable escape : ${variableEscapeTerminators[escape.last]} (${escape.toString()}) not yet supported');
-    }
-  }
-
-  static void _handleConstantEscape(String encodedEscape, StreamController<List<int>> stdin, Model model, DisplayAttributes currAttributes, List<int> escape) {
-    //print('Constant escape: ${constantEscapes[encodedEscape]} ${printEsc(escape)}');
-    switch (constantEscapes[encodedEscape]) {
-      case 'Query Cursor Position':
-        _queryCursorPosition(stdin, model);
-        break;
-      case 'Set Tab':
-        model.setTab();
-        break;
-      case 'Clear All Tabs':
-        model.clearAllTabs();
-        break;
-      case 'Erase End of Line':
-        model.eraseEndOfLine();
-        break;
-      case 'Erase Down':
-        model.eraseDown();
-        break;
-      case 'Erase Screen':
-        model.eraseScreen();
-        break;
-      case 'Keypad Application':
-        model.setKeypadMode(KeypadMode.APPLICATION);
-        break;
-      case 'Keypad Numeric':
-        model.setKeypadMode(KeypadMode.NUMERIC);
-        break;
-      default:
-        print('Constant escape : ${constantEscapes[encodedEscape]} (${escape.toString()}) not yet supported');
     }
   }
 
