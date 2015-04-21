@@ -100,10 +100,9 @@ class Terminal {
   void _registerEventHandlers() {
     stdout.stream.listen((List<int> out) => _processStdOut(new List.from(out)));
 
-    div.onKeyUp.listen((e) => _handleInput(e));
-
     div.onKeyDown.listen((e) {
       e.preventDefault();
+      _handleInput(e);
     });
 
     div.onMouseWheel.listen((wheelEvent) {
