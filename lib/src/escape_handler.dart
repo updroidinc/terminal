@@ -92,7 +92,7 @@ class EscapeHandler {
   }
 
   static void _handleVariableEscape(String encodedEscape, List<int> escape, DisplayAttributes currAttributes, Model model) {
-    print('Variable escape: ${EscapeHandler.variableEscapeTerminators[escape.last]} ${printEsc(escape)}');
+    //print('Variable escape: ${EscapeHandler.variableEscapeTerminators[escape.last]} ${printEsc(escape)}');
     switch (EscapeHandler.variableEscapeTerminators[escape.last]) {
       case 'Set Attribute Mode':
         _setAttributeMode(escape, currAttributes);
@@ -100,8 +100,17 @@ class EscapeHandler {
       case 'Cursor Home':
         _cursorHome(escape, model);
         break;
+      case 'Cursor Up':
+        _cursorUp(escape, model);
+        break;
+      case 'Cursor Down':
+        _cursorDown(escape, model);
+        break;
       case 'Cursor Forward':
-        _cursorForward(model);
+        _cursorRight(escape, model);
+        break;
+      case 'Cursor Backward':
+        _cursorLeft(escape, model);
         break;
       case 'Set Mode':
         _setMode(escape, model);
@@ -118,7 +127,7 @@ class EscapeHandler {
   }
 
   static void _handleConstantEscape(String encodedEscape, StreamController<List<int>> stdin, Model model, DisplayAttributes currAttributes, List<int> escape) {
-    print('Constant escape: ${constantEscapes[encodedEscape]} ${printEsc(escape)}');
+    //print('Constant escape: ${constantEscapes[encodedEscape]} ${printEsc(escape)}');
     switch (constantEscapes[encodedEscape]) {
       case 'Query Cursor Position':
         _queryCursorPosition(stdin, model);
@@ -130,7 +139,7 @@ class EscapeHandler {
         model.clearAllTabs();
         break;
       case 'Erase End of Line':
-        _eraseEndOfLine(model, currAttributes);
+        model.eraseEndOfLine();
         break;
       case 'Erase Down':
         model.eraseDown();
@@ -155,7 +164,7 @@ class EscapeHandler {
   }
 
   static void _setMode(List<int> escape, Model model) {
-    print('Set Mode: ${printEsc(escape)}');
+    //print('Set Mode: ${printEsc(escape)}');
     switch (printEsc(escape)) {
       case '<ESC>[?1h':
         model.cursorkeys = CursorkeysMode.APPLICATION;
@@ -166,7 +175,7 @@ class EscapeHandler {
   }
 
   static void _resetMode(List<int> escape, Model model) {
-    print('Reset Mode: ${printEsc(escape)}');
+    //print('Reset Mode: ${printEsc(escape)}');
     switch (printEsc(escape)) {
       case '<ESC>[?1l':
         model.cursorkeys = CursorkeysMode.NORMAL;
@@ -178,9 +187,9 @@ class EscapeHandler {
 
   static void _scrollScreen(List<int> escape) {
     int indexOfSemi = escape.indexOf(59);
-    int start = int.parse(UTF8.decode(escape.sublist(2, indexOfSemi)));
+    int start = int.parse(UTF8.decode(escape.sublist(2, indexOfSemi))) - 1;
     int end = int.parse(UTF8.decode(escape.sublist(indexOfSemi + 1, escape.length - 1)));
-    print('Scrolling: $start to $end');
+    //print('Scrolling: $start to $end');
   }
 
   /// Sets the cursor position where subsequent text will begin.
@@ -194,27 +203,49 @@ class EscapeHandler {
       col = 0;
     } else {
       int indexOfSemi = escape.indexOf(59);
-      row = int.parse(UTF8.decode(escape.sublist(2, indexOfSemi)));
-      col = int.parse(UTF8.decode(escape.sublist(indexOfSemi + 1, escape.length - 1)));
+      row = int.parse(UTF8.decode(escape.sublist(2, indexOfSemi))) - 1;
+      col = int.parse(UTF8.decode(escape.sublist(indexOfSemi + 1, escape.length - 1))) - 1;
     }
 
     model.cursor.row = row;
     model.cursor.col = col;
   }
 
-  /// Moves the cursor forward by COUNT columns; the default count is 1.
-  static void _cursorForward(Model model) {
-    model.cursorForward();
+  static void _cursorUp(List<int> escape, Model model) {
+    if (escape.length == 3) {
+      model.cursorUp();
+    } else {
+      escape = escape.sublist(2, escape.length - 1);
+      model.cursorUp(int.parse(UTF8.decode(escape)));
+    }
   }
 
-  /// Erases from the current cursor position to the end of the current line.
-  static void _eraseEndOfLine(Model model, DisplayAttributes attr) {
-    model.cursorBackward();
-    // TODO: need to be able to use the same display attributes from the previous Glyph,
-    // but right now it's too cumbersome.
-    Glyph g = new Glyph(Glyph.SPACE, attr);
-    model.setGlyphAt(g, model.cursor.row, model.cursor.col);
+  static void _cursorDown(List<int> escape, Model model) {
+    if (escape.length == 3) {
+      model.cursorDown();
+    } else {
+      escape = escape.sublist(2, escape.length - 1);
+      model.cursorDown(int.parse(UTF8.decode(escape)));
+    }
   }
+
+  static void _cursorRight(List<int> escape, Model model) {
+    if (escape.length == 3) {
+      model.cursorForward();
+    } else {
+      escape = escape.sublist(2, escape.length - 1);
+      model.cursorForward(int.parse(UTF8.decode(escape)));
+    }
+  }
+
+  static void _cursorLeft(List<int> escape, Model model) {
+      if (escape.length == 3) {
+        model.cursorBackward();
+      } else {
+        escape = escape.sublist(2, escape.length - 1);
+        model.cursorBackward(int.parse(UTF8.decode(escape)));
+      }
+    }
 
   /// Sets multiple display attribute settings.
   /// Sets local [DisplayAttributes], given [escape].

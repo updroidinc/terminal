@@ -105,15 +105,48 @@ class Model {
     _forwardBuffer.first[col] = g;
   }
 
-  void cursorForward() {
-    if (cursor.col < numCols - 1) {
-      cursor.col++;
+  void backspace() {
+    setGlyphAt(new Glyph(Glyph.SPACE, new DisplayAttributes()), cursor.row, cursor.col);
+    cursorBackward();
+  }
+
+  void cursorUp([int count]) {
+    if (cursor.row <= 0) return;
+
+    if (count == null) {
+      cursor.row--;
+    } else {
+      cursor.row = (cursor.row - count <= 0) ? 0 : cursor.row - count;
     }
   }
 
-  void cursorBackward() {
-    if (cursor.col > 1) {
+  void cursorDown([int count]) {
+    if (cursor.row >= numRows) return;
+
+    if (count == null) {
+      cursor.row++;
+    } else {
+      cursor.row = (cursor.row + count >= numRows) ? numRows - 1 : cursor.row + count;
+    }
+  }
+
+  void cursorForward([int count]) {
+    if (cursor.col >= numCols - 1) return;
+
+    if (count == null) {
+      cursor.col++;
+    } else {
+      cursor.col = (cursor.col + count >= numCols) ? numCols - 1 : cursor.col + count;
+    }
+  }
+
+  void cursorBackward([int count]) {
+    if (cursor.col <= 0) return;
+
+    if (count == null) {
       cursor.col--;
+    } else {
+      cursor.col = (cursor.col - count <= 0) ? 0 : cursor.col - count;
     }
   }
 
@@ -143,6 +176,14 @@ class Model {
 
   void clearAllTabs() {
     _tabs.clear();
+  }
+
+  /// Erases from the current cursor position to the end of the current line.
+  void eraseEndOfLine() {
+    //cursorBackward();
+    for (int i = cursor.col; i < _frame[cursor.row].length; i++) {
+      setGlyphAt(new Glyph(Glyph.SPACE, new DisplayAttributes()), cursor.row, i);
+    }
   }
 
   void eraseDown() {

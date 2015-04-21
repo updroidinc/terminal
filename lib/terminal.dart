@@ -237,6 +237,11 @@ class Terminal {
     for (var code in codes) {
       String char = new String.fromCharCode(code);
 
+      if (code == 8) {
+        _model.backspace();
+        continue;
+      }
+
       switch (code) {
         case 32:
           char = Glyph.SPACE;
