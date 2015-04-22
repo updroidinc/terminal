@@ -159,34 +159,39 @@ class Terminal {
       // Up Arrow
       if (_model.cursorkeys == CursorkeysMode.NORMAL) {
         stdin.add([27, 91, 65]);
+        return;
       } else {
-        stdin.add([27, 48, 65]);
+        //stdin.add([27, 48, 65]);
+        key = 107;
       }
-      return;
     } else if (key == 40) {
       // Down Arrow
       if (_model.cursorkeys == CursorkeysMode.NORMAL) {
         stdin.add([27, 91, 66]);
+        return;
       } else {
-        stdin.add([27, 48, 66]);
+        //stdin.add([27, 48, 66]);
+        key = 106;
       }
-      return;
+
     } else if (key == 37) {
       // Left Arrow
       if (_model.cursorkeys == CursorkeysMode.NORMAL) {
         stdin.add([27, 91, 68]);
+        return;
       } else {
-        stdin.add([27, 48, 68]);
+        //stdin.add([27, 48, 68]);
+        key = 104;
       }
-      return;
     } else if (key == 39) {
       // Right Arrow
       if (_model.cursorkeys == CursorkeysMode.NORMAL) {
         stdin.add([27, 91, 67]);
+        return;
       } else {
-        stdin.add([27, 48, 67]);
+        //stdin.add([27, 48, 67]);
+        key = 108;
       }
-      return;
     }
 
     // Don't let solo modifier keys through (Shift=16, Ctrl=17, Meta=91, Alt=18).
