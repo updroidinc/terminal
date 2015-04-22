@@ -135,10 +135,12 @@ class Terminal {
     int key = e.keyCode;
 
     if (e.ctrlKey) {
-      // Eat ctrl-v (paste).
+      // Eat Ctrl-V (paste).
       if (key == 86) return;
-
+      // Ctrl-C
       if (key == 67) key = 3;
+      // Ctrl-Z
+      if (key == 90) key = 26;
     }
 
     // keyCode behaves very oddly.
