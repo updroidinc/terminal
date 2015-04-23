@@ -279,7 +279,12 @@ class Terminal {
 
       Glyph g = new Glyph(char, _currAttributes);
       _model.setGlyphAt(g, _model.cursor.row, _model.cursor.col);
-      _model.cursorForward();
+      if (_model.cursor.col < _model.numCols - 1) {
+        _model.cursorForward();
+      } else {
+        _model.cursorCarriageReturn();
+        _model.cursorNewLine();
+      }
     }
 
     _controller.refreshDisplay();
