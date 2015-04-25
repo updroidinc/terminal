@@ -31,9 +31,9 @@ class Terminal {
   void set cursorBlink(bool b) => _controller.setCursorBlink(b);
 
   /// Returns current [Theme].
-  Theme get theme => _theme;
+  Theme get theme => _controller.theme;
   /// Sets a [Terminal]'s [Theme]. Default: Solarized-Dark.
-  void set theme(Theme thm) => _setTheme(thm);
+  void set theme(Theme thm) => _controller.setTheme(thm);
 
   // Private
   Model _model;
@@ -88,13 +88,6 @@ class Terminal {
     }
 
     return [rows, cols];
-  }
-
-  void _setTheme(Theme thm) {
-    _theme = thm;
-    div.style.backgroundColor = _theme.backgroundColor;
-    div.style.color = _theme.colors['white'];
-    _controller.refreshDisplay();
   }
 
   void _registerEventHandlers() {

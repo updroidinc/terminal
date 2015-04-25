@@ -8,12 +8,24 @@ class Controller {
   Timer _blinkTimer, _blinkTimeout;
   bool blinkOn;
 
+  /// Returns current [Theme].
+  Theme get theme => _theme;
+  /// Sets a [Terminal]'s [Theme]. Default: Solarized-Dark.
+  void set theme(Theme thm) => setTheme(thm);
+
   Controller(this.div, Model model, Theme theme) {
     _model = model;
     _theme = theme;
 
     blinkOn = false;
     setUpBlink();
+  }
+
+  void setTheme(Theme thm) {
+    _theme = thm;
+    div.style.backgroundColor = _theme.backgroundColor;
+    div.style.color = _theme.colors['white'];
+    refreshDisplay();
   }
 
   void setCursorBlink(bool b) {
