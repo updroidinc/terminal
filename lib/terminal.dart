@@ -52,7 +52,7 @@ class Terminal {
     _currAttributes = new DisplayAttributes();
     _theme = new Theme.SolarizedDark();
 
-    List<int> size = _calculateSize();
+    List<int> size = calculateSize();
     _model = new Model(size[0], size[1]);
     _controller = new Controller(div, _model, _theme);
 
@@ -69,6 +69,8 @@ class Terminal {
 
   void resize(int newRows, int newCols) {
     _model = new Model.fromOldModel(newRows, newCols, _model);
+    _controller.cancelBlink();
+    _controller = new Controller(div, _model, _theme);
 
     // User expects the prompt to appear after a resize.
     // Sending a \n results in a blank line above the first
@@ -77,7 +79,7 @@ class Terminal {
     stdin.add([10]);
   }
 
-  List<int> _calculateSize() {
+  List<int> calculateSize() {
     int rows = (div.contentEdge.height) ~/ _theme.charHeight;
     int cols = (div.contentEdge.width) ~/ _theme.charWidth + 1;
 
