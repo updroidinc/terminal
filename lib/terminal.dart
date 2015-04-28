@@ -130,8 +130,11 @@ class Terminal {
     int key = e.keyCode;
 
     if (e.ctrlKey) {
-      // Eat Ctrl-V (paste).
-      if (key == 86) return;
+      // Ctrl-V (paste).
+      if (key == 86) {
+        document.execCommand('paste', null, "");
+        return;
+      }
       // Ctrl-C
       if (key == 67) key = 3;
       // Ctrl-Z
