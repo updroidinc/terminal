@@ -106,7 +106,7 @@ class Model {
   }
 
   void backspace() {
-    setGlyphAt(new Glyph(Glyph.SPACE, new DisplayAttributes()), cursor.row, cursor.col);
+    //setGlyphAt(new Glyph(Glyph.SPACE, new DisplayAttributes()), cursor.row, cursor.col);
     cursorBackward();
   }
 
