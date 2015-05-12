@@ -6,7 +6,7 @@ authors:
 description: A terminal emulator written in Dart. Connect its I/O to a WebSocket or whatever you like. Originally developed for use in UpDroid Commander.
 homepage: www.github.com/updroidinc/terminal
 environment:
-  sdk: 1.9.3
+  sdk: 1.10.0
 dependencies:
   browser: any
   quiver: any
