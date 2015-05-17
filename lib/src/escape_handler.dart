@@ -112,6 +112,12 @@ class EscapeHandler {
       case 'Erase Screen':
         model.eraseScreen();
         break;
+      case 'Scroll Down':
+        _scrollDown(model);
+        break;
+      case 'Scroll Up':
+        _scrollUp(model);
+        break;
       case 'Keypad Application':
         model.setKeypadMode(KeypadMode.APPLICATION);
         break;
@@ -191,6 +197,9 @@ class EscapeHandler {
     int end = int.parse(UTF8.decode(escape.sublist(indexOfSemi + 1, escape.length - 1)));
     //print('Scrolling: $start to $end');
   }
+
+  static void _scrollDown(Model model) => model.scrollDown(25);
+  static void _scrollUp(Model model) => model.scrollUp(25);
 
   /// Sets the cursor position where subsequent text will begin.
   /// If no row/column parameters are provided (ie. <ESC>[H),
