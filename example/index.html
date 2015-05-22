@@ -8,8 +8,11 @@
     <link rel="stylesheet" href="main.css">
   </head>
 
-  <!-- contenteditable is important for clipboard paste functionality -->
-  <div tabindex="0" id="console" class="console" contenteditable="true"></div>
+  <div id="console" class="console">
+    <!-- contenteditable is important for clipboard paste functionality -->
+    <div tabindex="0" id="terminal" class="terminal" contenteditable="true"></div>
+    <div id="cursor" class="cursor">▏</div>
+  </div>
 
   <body>
     <p id="text"></p>

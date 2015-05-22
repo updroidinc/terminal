@@ -1,15 +1,27 @@
-.console {
+.terminal,.cursor {
+  font-size: 11px;
+  font-family: "DejaVu Sans Mono", "Liberation Mono", "Andale Mono", monospace;
+}
+
+.terminal {
   width: 542px;
   height: 350px;
   padding: 5px;
   border: 1px solid #dddddd;
-  font-size: 11px;
-  font-family: "DejaVu Sans Mono", "Liberation Mono", "Andale Mono", monospace;
   overflow-y: none;
 }
 
-.console:focus {
+.terminal:focus {
   outline: none;
+}
+
+.cursor {
+  display: block;
+  position: absolute;
+  width: 6.778px;
+  height: 14px;
+  color: #ffffff;
+  background-color: transparent;
 }
 
 .termrow {

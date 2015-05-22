@@ -2,6 +2,7 @@ part of model;
 
 class Controller {
   DivElement div;
+  DivElement cursor;
   Model _model;
   Theme _theme;
   bool cursorBlink = true;
@@ -13,7 +14,7 @@ class Controller {
   /// Sets a [Terminal]'s [Theme]. Default: Solarized-Dark.
   void set theme(Theme thm) => setTheme(thm);
 
-  Controller(this.div, Model model, Theme theme) {
+  Controller(this.div, this.cursor, Model model, Theme theme) {
     _model = model;
     _theme = theme;
 
@@ -33,7 +34,6 @@ class Controller {
 
     cancelBlink();
     setUpBlink();
-    refreshDisplay();
   }
 
   void setUpBlink() {
@@ -42,7 +42,7 @@ class Controller {
     _blinkTimeout = new Timer(new Duration(milliseconds: 1000), () {
       _blinkTimer = new Timer.periodic(new Duration(milliseconds: 500), (timer) {
         blinkOn = !blinkOn;
-        refreshDisplay();
+        _drawCursor();
       });
     });
   }
@@ -50,6 +50,13 @@ class Controller {
   void cancelBlink() {
     if (_blinkTimeout != null) _blinkTimeout.cancel();
     if (_blinkTimer != null) _blinkTimer.cancel();
+  }
+
+  void _drawCursor() {
+    cursor.style.visibility = blinkOn ? 'visible' : 'hidden';
+    // TODO: make padding + border calculation dynamic instead of 1 + 5 + 8
+    cursor.style.left = ((_model.cursor.col * _theme.charWidth) + 14 - 1).toString() + 'px';
+    cursor.style.top = ((_model.cursor.row * _theme.charHeight) + 14).toString() + 'px';
   }
 
   /// Generates the HTML for an individual row given
@@ -78,13 +85,7 @@ class Controller {
         str = '';
       }
 
-      // Draw the cursor.
-      if (_model.cursor.row == r && _model.cursor.col == c && blinkOn) {
-        str += Glyph.CURSOR;
-      } else {
-        str += curr.value;
-      }
-
+      str += curr.value;
       prev = curr;
     }
 
@@ -103,5 +104,7 @@ class Controller {
 
       div.append(row);
     }
+
+    _drawCursor();
   }
 }

@@ -37,6 +37,8 @@ class Terminal {
 
   // Private
   Model _model;
+  DivElement _terminal;
+  DivElement _cursor;
   Controller _controller;
   DisplayAttributes _currAttributes;
   Theme _theme;
@@ -46,6 +48,9 @@ class Terminal {
   static const int ESC = 27;
 
   Terminal (this.div) {
+    _terminal = div.children.first;
+    _cursor = div.children.last;
+
     stdout = new StreamController<List<int>>();
     stdin = new StreamController<List<int>>();
 
@@ -54,7 +59,7 @@ class Terminal {
 
     List<int> size = calculateSize();
     _model = new Model(size[0], size[1]);
-    _controller = new Controller(div, _model, _theme);
+    _controller = new Controller(_terminal, _cursor, _model, _theme);
 
     _resizing = false;
 
@@ -70,7 +75,7 @@ class Terminal {
   void resize(int newRows, int newCols) {
     _model = new Model.fromOldModel(newRows, newCols, _model);
     _controller.cancelBlink();
-    _controller = new Controller(div, _model, _theme);
+    _controller = new Controller(_terminal, _cursor, _model, _theme);
 
     // User expects the prompt to appear after a resize.
     // Sending a \n results in a blank line above the first
@@ -80,8 +85,8 @@ class Terminal {
   }
 
   List<int> calculateSize() {
-    int rows = (div.contentEdge.height) ~/ _theme.charHeight;
-    int cols = (div.contentEdge.width) ~/ _theme.charWidth + 1;
+    int rows = (_terminal.contentEdge.height) ~/ _theme.charHeight;
+    int cols = (_terminal.contentEdge.width) ~/ _theme.charWidth + 1;
 
     // Set a default if the calculated size is unusable.
     if (rows < 10 || cols < 10) {
@@ -95,12 +100,12 @@ class Terminal {
   void _registerEventHandlers() {
     stdout.stream.listen((List<int> out) => _processStdOut(new List.from(out)));
 
-    div.onKeyDown.listen((e) {
+    _terminal.onKeyDown.listen((e) {
       e.preventDefault();
       _handleInput(e);
     });
 
-    div.onMouseWheel.listen((wheelEvent) {
+    _terminal.onMouseWheel.listen((wheelEvent) {
       // Scrolling should target only the console.
       wheelEvent.preventDefault();
 
@@ -110,7 +115,7 @@ class Terminal {
       _controller.refreshDisplay();
     });
 
-    div.onPaste.listen((e) {
+    _terminal.onPaste.listen((e) {
       String pasteString = e.clipboardData.getData('text');
       for (int i in pasteString.runes) {
         stdin.add([i]);
