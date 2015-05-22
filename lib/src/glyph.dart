@@ -8,6 +8,11 @@ class Glyph {
   static const GT = '&gt';
   static const CURSOR = '▏';
 
+  // Cursor types:
+  //  (226 150 129) ▁
+  //  (226 150 136) █
+  //  (226 150 143) ▏
+
   bool bright, dim, underscore, blink, reverse, hidden;
   String value, fgColor, bgColor;
 
