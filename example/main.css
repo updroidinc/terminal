@@ -1,4 +1,5 @@
 .terminal,.cursor {
+  display: inline-block;
   font-size: 11px;
   font-family: "DejaVu Sans Mono", "Liberation Mono", "Andale Mono", monospace;
 }
@@ -16,7 +17,6 @@
 }
 
 .cursor {
-  display: block;
   position: absolute;
   width: 6.778px;
   height: 14px;
