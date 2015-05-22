@@ -8,7 +8,7 @@
   height: 350px;
   padding: 5px;
   border: 1px solid #dddddd;
-  overflow-y: none;
+  overflow-y: hidden;
 }
 
 .terminal:focus {
