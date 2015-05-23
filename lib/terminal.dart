@@ -48,8 +48,8 @@ class Terminal {
   static const int ESC = 27;
 
   Terminal (this.div) {
-    _terminal = div.children.first;
-    _cursor = div.children.last;
+    _terminal = _createTerminalOutputDiv();
+    _cursor = _createTerminalCursorDiv();
 
     stdout = new StreamController<List<int>>();
     stdin = new StreamController<List<int>>();
@@ -95,6 +95,27 @@ class Terminal {
     }
 
     return [rows, cols];
+  }
+
+  DivElement _createTerminalOutputDiv() {
+    // contenteditable is important for clipboard paste functionality.
+    DivElement termOutput = new DivElement()
+      ..tabIndex = 0
+      ..classes.add('terminal-output')
+      ..contentEditable = 'true'
+      ..spellcheck = false;
+
+    div.children.add(termOutput);
+    return termOutput;
+  }
+
+  DivElement _createTerminalCursorDiv() {
+    DivElement termCursor = new DivElement()
+      ..classes.add('terminal-cursor')
+      ..text = Glyph.CURSOR;
+
+    div.children.add(termCursor);
+    return termCursor;
   }
 
   void _registerEventHandlers() {
