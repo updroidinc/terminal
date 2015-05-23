@@ -85,7 +85,7 @@ class Terminal {
   }
 
   List<int> calculateSize() {
-    int rows = (_terminal.contentEdge.height) ~/ _theme.charHeight;
+    int rows = (_terminal.contentEdge.height) ~/ _theme.charHeight - 1;
     int cols = (_terminal.contentEdge.width) ~/ _theme.charWidth + 1;
 
     // Set a default if the calculated size is unusable.
