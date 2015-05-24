@@ -156,7 +156,7 @@ class Terminal {
     int key = e.keyCode;
 
     // Don't let solo modifier keys through (Shift=16, Ctrl=17, Meta=91, Alt=18).
-    if (key == 16 && key == 17 && key == 91 && key == 18) {
+    if (key == 16 || key == 17 || key == 91 || key == 18) {
       return;
     }
 
