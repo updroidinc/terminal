@@ -35,6 +35,7 @@ class Model {
   KeypadMode keypad;
   CursorkeysMode cursorkeys;
 
+
   // Implemented as stacks in scrolling.
   List<List> _reverseBuffer;
   List<List> _forwardBuffer;
@@ -44,6 +45,8 @@ class Model {
 
   // Tab locations.
   List<List> _tabs;
+
+  int _scrollStart, _scrollEnd;
 
   Model (this.numRows, this.numCols) {
     cursor = new Cursor();
@@ -108,6 +111,20 @@ class Model {
   void backspace() {
     //setGlyphAt(new Glyph(Glyph.SPACE, new DisplayAttributes()), cursor.row, cursor.col);
     cursorBackward();
+  }
+
+  void cursorHome(int row, int col) {
+    // Detect screen scrolling when _scrollEnd switches from last line to second-to-last line.
+    if (_scrollEnd == numRows - 2) {
+      if (row == _scrollEnd) {
+        scrollDown(1);
+      } else if (row == _scrollStart) {
+        scrollUp(1);
+      }
+    }
+
+    cursor.row = row;
+    cursor.col = col;
   }
 
   void cursorUp([int count]) {
@@ -222,29 +239,32 @@ class Model {
     _frame.add(newRow);
   }
 
-  /// Manipulates the buffers and rows to handle scrolling
+  void scrollScreen(int start, int end) {
+    _scrollStart = start;
+    _scrollEnd = end;
+  }
+
+  /// Manipulates the frame to handle scrolling
   /// upward of a single line.
   void scrollUp(int numLines) {
     for (int i = 0; i < numLines; i++) {
-      if (_reverseBuffer.isEmpty) return;
-
-      _frame.insert(0, _reverseBuffer.last);
-      _reverseBuffer.removeLast();
-      _forwardBuffer.add(_frame[_frame.length - 1]);
-      _frame.removeLast();
+      _frame.removeAt(numRows - 2);
+      _frame.insert(0, new List<Glyph>());
+      for (int c = 0; c < numCols; c++) {
+        _frame[0].add(new Glyph(Glyph.SPACE, new DisplayAttributes()));
+      }
     }
   }
 
-  /// Manipulates the buffers and rows to handle scrolling
+  /// Manipulates the frame to handle scrolling
   /// upward of a single line.
   void scrollDown(int numLines) {
     for (int i = 0; i < numLines; i++) {
-      if (_forwardBuffer.isEmpty) return;
-
-      _frame.add(_forwardBuffer.last);
-      _forwardBuffer.removeLast();
-      _reverseBuffer.add(_frame[0]);
       _frame.removeAt(0);
+      _frame.insert(numRows - 2, new List<Glyph>());
+      for (int c = 0; c < numCols; c++) {
+        _frame[numRows - 2].add(new Glyph(Glyph.SPACE, new DisplayAttributes()));
+      }
     }
   }
 

@@ -157,7 +157,7 @@ class EscapeHandler {
         _resetMode(escape, model);
         break;
       case 'Scroll Screen':
-        _scrollScreen(escape);
+        _scrollScreen(escape, model);
         break;
       default:
         print('Variable escape : ${variableEscapeTerminators[escape.last]} (${escape.toString()}) not yet supported');
@@ -191,15 +191,16 @@ class EscapeHandler {
     }
   }
 
-  static void _scrollScreen(List<int> escape) {
+  static void _scrollScreen(List<int> escape, Model model) {
     int indexOfSemi = escape.indexOf(59);
     int start = int.parse(UTF8.decode(escape.sublist(2, indexOfSemi))) - 1;
-    int end = int.parse(UTF8.decode(escape.sublist(indexOfSemi + 1, escape.length - 1)));
+    int end = int.parse(UTF8.decode(escape.sublist(indexOfSemi + 1, escape.length - 1))) - 1;
     //print('Scrolling: $start to $end');
+    model.scrollScreen(start, end);
   }
 
-  static void _scrollDown(Model model) => model.scrollDown(25);
-  static void _scrollUp(Model model) => model.scrollUp(25);
+  static void _scrollDown(Model model) => print('Scroll Down not handled!');
+  static void _scrollUp(Model model) => print('Scroll Up not handled!');
 
   /// Sets the cursor position where subsequent text will begin.
   /// If no row/column parameters are provided (ie. <ESC>[H),
@@ -216,8 +217,7 @@ class EscapeHandler {
       col = int.parse(UTF8.decode(escape.sublist(indexOfSemi + 1, escape.length - 1))) - 1;
     }
 
-    model.cursor.row = row;
-    model.cursor.col = col;
+    model.cursorHome(row, col);
   }
 
   static void _cursorUp(List<int> escape, Model model) {
