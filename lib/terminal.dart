@@ -155,27 +155,9 @@ class Terminal {
 
     int key = e.keyCode;
 
-    if (e.ctrlKey) {
-      // Ctrl-V (paste).
-      if (key == 86) {
-        document.execCommand('paste', null, "");
-        return;
-      }
-      // Ctrl-C
-      if (key == 67) key = 3;
-      // Ctrl-Z
-      if (key == 90) key = 26;
-    }
-
-    // keyCode behaves very oddly.
-    if (!e.shiftKey) {
-      if (NOSHIFT_KEYS.containsKey(key)) {
-        key = NOSHIFT_KEYS[key];
-      }
-    } else {
-      if (SHIFT_KEYS.containsKey(key)) {
-        key = SHIFT_KEYS[key];
-      }
+    // Don't let solo modifier keys through (Shift=16, Ctrl=17, Meta=91, Alt=18).
+    if (key == 16 && key == 17 && key == 91 && key == 18) {
+      return;
     }
 
     // Carriage Return (13) => New Line (10).
@@ -220,10 +202,30 @@ class Terminal {
       }
     }
 
-    // Don't let solo modifier keys through (Shift=16, Ctrl=17, Meta=91, Alt=18).
-    if (key != 16 && key != 17 && key != 91 && key != 18) {
-      stdin.add([key]);
+    if (e.ctrlKey) {
+      // Ctrl-V (paste).
+      if (key == 86) {
+        document.execCommand('paste', null, "");
+        return;
+      }
+      // Ctrl-C
+      if (key == 67) key = 3;
+      // Ctrl-Z
+      if (key == 90) key = 26;
     }
+
+    // keyCode behaves very oddly.
+    if (!e.shiftKey) {
+      if (NOSHIFT_KEYS.containsKey(key)) {
+        key = NOSHIFT_KEYS[key];
+      }
+    } else {
+      if (SHIFT_KEYS.containsKey(key)) {
+        key = SHIFT_KEYS[key];
+      }
+    }
+
+    stdin.add([key]);
   }
 
   /// Processes [output] by coordinating handling of strings
