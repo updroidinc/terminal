@@ -156,9 +156,11 @@ class Terminal {
     int key = e.keyCode;
 
     // Don't let solo modifier keys through (Shift=16, Ctrl=17, Meta=91, Alt=18).
-    if (key == 16 || key == 17 || key == 91 || key == 18) {
-      return;
-    }
+    if (key == 16 || key == 17 || key == 91 || key == 18) return;
+
+    // Don't let other keys that don't make sense in a vt100 terminal through.
+    // (INSERT=45, PAGEUP=33, PAGEDOWN=34).
+    if (key == 45 || key == 33 || key == 34) return;
 
     // Carriage Return (13) => New Line (10).
     if (key == 13) {
