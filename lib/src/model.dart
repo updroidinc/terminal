@@ -148,7 +148,7 @@ class Model {
   }
 
   void cursorForward([int count]) {
-    if (cursor.col >= numCols - 1) return;
+    if (cursor.col >= numCols) return;
 
     if (count == null) {
       cursor.col++;
@@ -168,10 +168,12 @@ class Model {
   }
 
   void cursorCarriageReturn() {
+    //print('cursorCarriageReturn');
     cursor.col = 0;
   }
 
   void cursorNewLine() {
+    //print('cursorNewLine');
     if (_forwardBuffer.isNotEmpty) {
       _forwardBuffer.insert(0, new List<Glyph>());
       for (int c = 0; c < numCols; c++) {

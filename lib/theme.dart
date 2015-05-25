@@ -8,7 +8,7 @@ class Theme {
   String backgroundColor;
 
   // Manually calculated via trial-and-error.
-  double charWidth = 6.778;
+  double charWidth = 299 / 45;
   int charHeight = 14;
 
   Theme.SolarizedDark() {

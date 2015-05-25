@@ -269,6 +269,7 @@ class Terminal {
   /// Processes [output] by coordinating handling of strings
   /// and escape parsing.
   void _processStdOut(List<int> output) {
+    //print(output.toString());
     int nextEsc;
     while (output.isNotEmpty) {
       nextEsc = output.indexOf(ESC);
@@ -333,6 +334,8 @@ class Terminal {
           _model.cursorNewLine();
           continue;
         case 13:
+          // To differentiate between an early CR (like from a prompt) and right margin.
+          if (_model.cursor.col >= _model.numCols - 1) _model.cursorNewLine();
           _model.cursorCarriageReturn();
           continue;
         case 7:
@@ -343,12 +346,7 @@ class Terminal {
 
       Glyph g = new Glyph(char, _currAttributes);
       _model.setGlyphAt(g, _model.cursor.row, _model.cursor.col);
-      if (_model.cursor.col < _model.numCols - 1) {
-        _model.cursorForward();
-      } else {
-        _model.cursorCarriageReturn();
-        _model.cursorNewLine();
-      }
+      _model.cursorForward();
     }
 
     _controller.refreshDisplay();

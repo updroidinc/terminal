@@ -55,9 +55,9 @@ class Controller {
   void _drawCursor() {
     cursor.style.visibility = blinkOn ? 'visible' : 'hidden';
     cursor.style.color = _theme.colors['white'];
-    // TODO: make padding + border calculation dynamic instead of 1 + 5 + 8
-    cursor.style.left = ((_model.cursor.col * _theme.charWidth) + 14 - 1).toString() + 'px';
-    cursor.style.top = ((_model.cursor.row * _theme.charHeight) + 14).toString() + 'px';
+    // TODO: make offset calculation dynamic.
+    cursor.style.left = ((_model.cursor.col * _theme.charWidth) + 5).toString() + 'px';
+    cursor.style.top = ((_model.cursor.row * _theme.charHeight) + 5).toString() + 'px';
   }
 
   /// Generates the HTML for an individual row given

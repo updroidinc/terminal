@@ -1,4 +1,5 @@
 .console {
+  position: relative;
   width: 542px;
   height: 350px;
   border: 1px solid #dddddd;
@@ -25,7 +26,7 @@
 
 .terminal-cursor {
   position: absolute;
-  width: 6.778px;
+  width: calc(299px / 45);
   height: 14px;
   background-color: transparent;
 }
