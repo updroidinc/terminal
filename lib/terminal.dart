@@ -51,7 +51,7 @@ class Terminal {
     _terminal = _createTerminalOutputDiv();
     _cursor = _createTerminalCursorDiv();
 
-    stdout = new StreamController<List<int>>();
+    stdout = new StreamController<List<int>>.broadcast();
     stdin = new StreamController<List<int>>();
 
     _currAttributes = new DisplayAttributes();
@@ -144,6 +144,10 @@ class Terminal {
     });
   }
 
+  Future<bool> _listenForBell() {
+    return stdout.stream.first.then((e) => e.contains(7));
+  }
+
   /// Handles a given [KeyboardEvent].
   void _handleInput(KeyboardEvent e) {
     // Deactivate blinking while the user is typing.
@@ -161,6 +165,20 @@ class Terminal {
     // Don't let other keys that don't make sense in a vt100 terminal through.
     // (INSERT=45, PAGEUP=33, PAGEDOWN=34).
     if (key == 45 || key == 33 || key == 34) return;
+
+    // Special handling of DELETE, HOME, and END keys.
+    // TODO: fix this when xterm emulation is supported.
+    switch (key) {
+      case 46:
+        _handleDeleteKey();
+        return;
+      case 36:
+        _handleHomeKey();
+        return;
+      case 35:
+        _handleEndKey();
+        return;
+    }
 
     // Carriage Return (13) => New Line (10).
     if (key == 13) {
@@ -228,6 +246,24 @@ class Terminal {
     }
 
     stdin.add([key]);
+  }
+
+  void _handleDeleteKey() {
+    stdin.add([27, 91, 67, 8]);
+  }
+
+  Future _handleHomeKey() async {
+    stdin.add([27, 91, 68]);
+    while (! await _listenForBell()) {
+      stdin.add([27, 91, 68]);
+    }
+  }
+
+  Future _handleEndKey() async {
+    stdin.add([27, 91, 67]);
+    while (! await _listenForBell()) {
+      stdin.add([27, 91, 67]);
+    }
   }
 
   /// Processes [output] by coordinating handling of strings
