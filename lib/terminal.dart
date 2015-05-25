@@ -85,8 +85,11 @@ class Terminal {
   }
 
   List<int> calculateSize() {
-    int rows = (_terminal.contentEdge.height) ~/ _theme.charHeight - 1;
-    int cols = (_terminal.contentEdge.width) ~/ _theme.charWidth + 1;
+    // The +1 on width is needed because bash throws an extra space
+    // ahead of a linewrap for some reason. So if bash cols = 80,
+    // then terminal cols = 81.
+    int rows = _terminal.contentEdge.height ~/ _theme.charHeight;
+    int cols = _terminal.contentEdge.width ~/ _theme.charWidth + 1;
 
     // Set a default if the calculated size is unusable.
     if (rows < 10 || cols < 10) {
@@ -334,8 +337,6 @@ class Terminal {
           _model.cursorNewLine();
           continue;
         case 13:
-          // To differentiate between an early CR (like from a prompt) and right margin.
-          if (_model.cursor.col >= _model.numCols - 1) _model.cursorNewLine();
           _model.cursorCarriageReturn();
           continue;
         case 7:
@@ -344,9 +345,15 @@ class Terminal {
           continue;
       }
 
-      Glyph g = new Glyph(char, _currAttributes);
-      _model.setGlyphAt(g, _model.cursor.row, _model.cursor.col);
-      _model.cursorForward();
+      // To differentiate between an early CR (like from a prompt) and linewrap.
+      if (_model.cursor.col >= _model.numCols - 1) {
+        _model.cursorCarriageReturn();
+        _model.cursorNewLine();
+      } else {
+        Glyph g = new Glyph(char, _currAttributes);
+        _model.setGlyphAt(g, _model.cursor.row, _model.cursor.col);
+        _model.cursorForward();
+      }
     }
 
     _controller.refreshDisplay();
