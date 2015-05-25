@@ -1,7 +1,7 @@
 part of model;
 
-// A map of Dart keyCodes (whatever they really are)
-// to UTF8 integers of their Shift equivalents.
+// Remapping of Dart keyCodes (whatever they really are)
+// to UTF8 integers of their Non-Shift equivalents.
 const Map<int, int> NOSHIFT_KEYS = const {
   65: 97,   // A => a
   66: 98,   // B => b
@@ -29,6 +29,24 @@ const Map<int, int> NOSHIFT_KEYS = const {
   88: 120,  // X => x
   89: 121,  // Y => y
   90: 122,  // Z => z
+
+  // Num Lock
+  96: 48,   // ` => 0
+  97: 49,   // a => 1
+  98: 50,   // b => 2
+  99: 51,   // c => 3
+  100: 52,  // d => 4
+  101: 53,  // e => 5
+  102: 54,  // f => 6
+  103: 55,  // g => 7
+  104: 56,  // h => 8
+  105: 57,  // i => 9
+  110: 46, // n => .
+  111: 47,  // o => /
+  106: 42,  // j => *
+  109: 45,  // m => -
+  107: 43,  // k => +
+
   186: 59,  // : => ;
   187: 61,  // + => =
   188: 44,  // < => ,
@@ -42,6 +60,8 @@ const Map<int, int> NOSHIFT_KEYS = const {
   222: 39   // " => '
 };
 
+// Remapping of Dart keyCodes (whatever they really are)
+// to UTF8 integers of their Non-Shift equivalents.
 const SHIFT_KEYS = const {
   48: 41,   // 0 => )
   49: 33,   // 1 => !
