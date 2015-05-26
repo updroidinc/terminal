@@ -1,14 +1,10 @@
 library model;
 
-import 'dart:html';
 import 'dart:async';
 import 'dart:convert';
 import 'package:quiver/core.dart';
-import 'package:terminal/theme.dart';
 
-part 'controller.dart';
 part 'display_attributes.dart';
-part 'escape_handler.dart';
 part 'glyph.dart';
 
 class Cursor {

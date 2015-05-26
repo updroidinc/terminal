@@ -4,6 +4,7 @@ import 'dart:html';
 import 'dart:async';
 
 import 'theme.dart';
+import 'package:terminal/src/controller.dart';
 import 'package:terminal/src/model.dart';
 import 'package:terminal/src/input.dart';
 import 'package:terminal/src/output.dart';

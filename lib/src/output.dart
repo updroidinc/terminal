@@ -2,7 +2,9 @@ library output;
 
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:terminal/src/model.dart';
+import 'package:terminal/src/controller.dart';
 
 part 'escape_handler.dart';
 

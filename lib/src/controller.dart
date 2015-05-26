@@ -1,4 +1,10 @@
-part of model;
+library controller;
+
+import 'dart:async';
+import 'dart:html';
+
+import 'package:terminal/theme.dart';
+import 'package:terminal/src/model.dart';
 
 class Controller {
   DivElement div;
