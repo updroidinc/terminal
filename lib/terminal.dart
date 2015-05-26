@@ -183,47 +183,15 @@ class Terminal {
         return;
     }
 
-    // Carriage Return (13) => New Line (10).
-    if (key == 13) {
-      key = 10;
-    } else if (key == 38) {
-      // Up Arrow
-      if (_model.cursorkeys == CursorkeysMode.NORMAL) {
-        stdin.add([27, 91, 65]);
-        return;
-      } else {
-        //stdin.add([27, 48, 65]);
-        key = 107;
-      }
-    } else if (key == 40) {
-      // Down Arrow
-      if (_model.cursorkeys == CursorkeysMode.NORMAL) {
-        stdin.add([27, 91, 66]);
-        return;
-      } else {
-        //stdin.add([27, 48, 66]);
-        key = 106;
-      }
-
-    } else if (key == 37) {
-      // Left Arrow
-      if (_model.cursorkeys == CursorkeysMode.NORMAL) {
-        stdin.add([27, 91, 68]);
-        return;
-      } else {
-        //stdin.add([27, 48, 68]);
-        key = 104;
-      }
-    } else if (key == 39) {
-      // Right Arrow
-      if (_model.cursorkeys == CursorkeysMode.NORMAL) {
-        stdin.add([27, 91, 67]);
-        return;
-      } else {
-        //stdin.add([27, 48, 67]);
-        key = 108;
-      }
+    // Arrow keys.
+    if (CURSOR_KEYS_NORMAL.containsKey(key)) {
+      bool normKeys = _model.cursorkeys == CursorkeysMode.NORMAL;
+      stdin.add(normKeys ? CURSOR_KEYS_NORMAL[key] : CURSOR_KEYS_APP[key]);
+      return;
     }
+
+    // Carriage Return (13) => New Line (10).
+    if (key == 13) key = 10;
 
     if (e.ctrlKey) {
       // Ctrl-V (paste).

@@ -86,6 +86,20 @@ const SHIFT_KEYS = const {
   222: 34   // "
 };
 
+Map<int, List> CURSOR_KEYS_NORMAL = {
+  38: [27, 91, 65], // UP
+  40: [27, 91, 66], // DOWN
+  37: [27, 91, 68], // LEFT
+  39: [27, 91, 67]  // RIGHT
+};
+
+Map<int, List> CURSOR_KEYS_APP = {
+  38: [107], // UP
+  40: [106], // DOWN
+  37: [104], // LEFT
+  39: [108]  // RIGHT
+};
+
 const Map<int, String> NON_MODIFIABLE_KEYS = const {
   8: 'BACKSPACE',
   9: 'TAB',
