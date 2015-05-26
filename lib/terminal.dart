@@ -190,21 +190,6 @@ class Terminal {
       return;
     }
 
-    // Carriage Return (13) => New Line (10).
-    if (key == 13) key = 10;
-
-    if (e.ctrlKey) {
-      // Ctrl-V (paste).
-      if (key == 86) {
-        document.execCommand('paste', null, "");
-        return;
-      }
-      // Ctrl-C
-      if (key == 67) key = 3;
-      // Ctrl-Z
-      if (key == 90) key = 26;
-    }
-
     // keyCode behaves very oddly.
     if (!e.shiftKey) {
       if (NOSHIFT_KEYS.containsKey(key)) {
@@ -214,6 +199,19 @@ class Terminal {
       if (SHIFT_KEYS.containsKey(key)) {
         key = SHIFT_KEYS[key];
       }
+    }
+
+    // Carriage Return (13) => New Line (10).
+    if (key == 13) key = 10;
+
+    // Ctrl-V, Ctrl-C, Ctrl-Z.
+    if (e.ctrlKey) {
+      if (key == 86) {
+        document.execCommand('paste', null, "");
+        return;
+      }
+      if (key == 67) key = 3;
+      if (key == 90) key = 26;
     }
 
     stdin.add([key]);
