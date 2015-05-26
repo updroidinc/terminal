@@ -112,9 +112,9 @@ class Model {
     // Detect screen scrolling when _scrollEnd switches from last line to second-to-last line.
     if (_scrollEnd == numRows - 2) {
       if (row == _scrollEnd) {
-        scrollDown(1);
+        _scrollDown(1);
       } else if (row == _scrollStart) {
-        scrollUp(1);
+        _scrollUp(1);
       }
     }
 
@@ -224,6 +224,41 @@ class Model {
     keypad = mode;
   }
 
+  /// Manipulates the frame & scroll bubber to handle scrolling down in normal,
+  /// non-application mode.
+  void scrollUp(int numLines) {
+    for (int i = 0; i < numLines; i++) {
+      if (_reverseBuffer.isEmpty) return;
+
+      _frame.insert(0, _reverseBuffer.last);
+      _reverseBuffer.removeLast();
+      _forwardBuffer.add(_frame[_frame.length - 1]);
+      _frame.removeLast();
+    }
+  }
+
+  /// Manipulates the frame & scroll bubber to handle scrolling down in normal,
+  /// non-application mode.
+  void scrollDown(int numLines) {
+    for (int i = 0; i < numLines; i++) {
+      if (_forwardBuffer.isEmpty) return;
+
+      _frame.add(_forwardBuffer.last);
+      _forwardBuffer.removeLast();
+      _reverseBuffer.add(_frame[0]);
+      _frame.removeAt(0);
+    }
+  }
+
+  void scrollToBottom() {
+    while (_forwardBuffer.isNotEmpty) {
+      _frame.add(_forwardBuffer.last);
+      _forwardBuffer.removeLast();
+      _reverseBuffer.add(_frame[0]);
+      _frame.removeAt(0);
+    }
+  }
+
   void _pushBuffer() {
     _reverseBuffer.add(_frame[0]);
     if (_reverseBuffer.length > _MAXBUFFER) _reverseBuffer.removeAt(0);
@@ -242,8 +277,8 @@ class Model {
   }
 
   /// Manipulates the frame to handle scrolling
-  /// upward of a single line.
-  void scrollUp(int numLines) {
+  /// upward of a single line in application mode.
+  void _scrollUp(int numLines) {
     for (int i = 0; i < numLines; i++) {
       _frame.removeAt(numRows - 2);
       _frame.insert(0, new List<Glyph>());
@@ -254,23 +289,14 @@ class Model {
   }
 
   /// Manipulates the frame to handle scrolling
-  /// upward of a single line.
-  void scrollDown(int numLines) {
+  /// downward of a single line in application mode.
+  void _scrollDown(int numLines) {
     for (int i = 0; i < numLines; i++) {
       _frame.removeAt(0);
       _frame.insert(numRows - 2, new List<Glyph>());
       for (int c = 0; c < numCols; c++) {
         _frame[numRows - 2].add(new Glyph(Glyph.SPACE, new DisplayAttributes()));
       }
-    }
-  }
-
-  void scrollToBottom() {
-    while (_forwardBuffer.isNotEmpty) {
-      _frame.add(_forwardBuffer.last);
-      _forwardBuffer.removeLast();
-      _reverseBuffer.add(_frame[0]);
-      _frame.removeAt(0);
     }
   }
 
