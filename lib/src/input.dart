@@ -62,7 +62,7 @@ class InputHandler {
 
     // Ctrl-V, Ctrl-C, Ctrl-Z.
     if (e.ctrlKey) {
-      if (key == 86) {
+      if (key == 118) {
         document.execCommand('paste', null, "");
         return;
       }

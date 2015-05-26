@@ -107,8 +107,11 @@ class Terminal {
     DivElement termOutput = new DivElement()
       ..tabIndex = 0
       ..classes.add('terminal-output')
-      ..contentEditable = 'true'
       ..spellcheck = false;
+
+    // TODO: figure out how to enable copy/paste via context menu with this,
+    // and hide the contenteditable cursor that comes with it.
+    //termOutput.contentEditable = 'true';
 
     div.children.add(termOutput);
     return termOutput;
