@@ -1,4 +1,4 @@
-part of model;
+part of output;
 
 class EscapeHandler {
   // Taken from: http://www.termsys.demon.co.uk/vtansi.htm
