@@ -44,11 +44,7 @@ void initWebSocket(String url, [int retrySeconds = 2]) {
     });
 
     ws.onClose.listen((e) {
-      print('Terminal disconnected due to CLOSE. Retrying...');
-      if (!encounteredError) {
-        new Timer(new Duration(seconds:retrySeconds), () => initWebSocket(url, 4));
-      }
-      encounteredError = true;
+      print('Terminal disconnected due to CLOSE.');
     });
 
     ws.onError.listen((e) {
