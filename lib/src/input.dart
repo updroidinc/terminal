@@ -8,8 +8,14 @@ import 'package:terminal/src/model.dart';
 part 'input_keys.dart';
 
 class InputHandler {
+  StreamController<List<int>> stdin;
+
+  InputHandler() {
+    stdin = new StreamController<List<int>>();
+  }
+
   /// Handles a given [KeyboardEvent].
-  static void handleInput(KeyboardEvent e, Model model, StreamController stdin, StreamController stdout) {
+  void handleInput(KeyboardEvent e, Model model, StreamController stdout) {
     int key = e.keyCode;
 
     // Don't let solo modifier keys through (Shift=16, Ctrl=17, Meta=91, Alt=18).
@@ -23,13 +29,13 @@ class InputHandler {
     // TODO: fix this when xterm emulation is supported.
     switch (key) {
       case 46:
-        _handleDeleteKey(stdin, stdout);
+        _handleDeleteKey(stdout);
         return;
       case 36:
-        _handleHomeKey(stdin, stdout);
+        _handleHomeKey(stdout);
         return;
       case 35:
-        _handleEndKey(stdin, stdout);
+        _handleEndKey(stdout);
         return;
     }
 
@@ -67,22 +73,22 @@ class InputHandler {
     stdin.add([key]);
   }
 
-  static Future<bool> _listenForBell(StreamController stdout) {
+  Future<bool> _listenForBell(StreamController stdout) {
     return stdout.stream.first.then((e) => e.contains(7));
   }
 
-  static void _handleDeleteKey(StreamController stdin, StreamController stdout) {
+  void _handleDeleteKey(StreamController stdout) {
     stdin.add([27, 91, 67, 8]);
   }
 
-  static Future _handleHomeKey(StreamController stdin, StreamController stdout) async {
+  Future _handleHomeKey(StreamController stdout) async {
     stdin.add([27, 91, 68]);
     while (!await _listenForBell(stdout)) {
       stdin.add([27, 91, 68]);
     }
   }
 
-  static Future _handleEndKey(StreamController stdin, StreamController stdout) async {
+  Future _handleEndKey(StreamController stdout) async {
     stdin.add([27, 91, 67]);
     while (!await _listenForBell(stdout)) {
       stdin.add([27, 91, 67]);

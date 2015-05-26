@@ -18,10 +18,10 @@ class Terminal {
   DivElement div;
 
   /// A stream of [String], JSON-encoded UTF8 bytes (List<int>).
-  StreamController<List<int>> stdout;
+  StreamController<List<int>> get stdout => _outputHandler.stdout;
 
   /// A stream of [String], JSON-encoded UTF8 bytes (List<int>).
-  StreamController<List<int>> stdin;
+  StreamController<List<int>> get stdin => _inputHandler.stdin;
 
   /// An int that sets the number of lines scrolled per mouse
   /// wheel event. Default: 3
@@ -42,6 +42,8 @@ class Terminal {
   DivElement _terminal;
   DivElement _cursor;
   Controller _controller;
+  InputHandler _inputHandler;
+  OutputHandler _outputHandler;
   DisplayAttributes _currAttributes;
   Theme _theme;
 
@@ -51,8 +53,8 @@ class Terminal {
     _terminal = _createTerminalOutputDiv();
     _cursor = _createTerminalCursorDiv();
 
-    stdout = new StreamController<List<int>>.broadcast();
-    stdin = new StreamController<List<int>>();
+    _inputHandler = new InputHandler();
+    _outputHandler = new OutputHandler();
 
     _currAttributes = new DisplayAttributes();
     _theme = new Theme.SolarizedDark();
@@ -122,7 +124,7 @@ class Terminal {
   }
 
   void _registerEventHandlers() {
-    stdout.stream.listen((List<int> out) => OutputHandler.processStdOut(new List.from(out), _controller, stdin, _model, _currAttributes, _resizing));
+    stdout.stream.listen((List<int> out) => _outputHandler.processStdOut(new List.from(out), _controller, stdin, _model, _currAttributes, _resizing));
 
     _terminal.onKeyDown.listen((e) {
       e.preventDefault();
@@ -134,7 +136,7 @@ class Terminal {
       _model.scrollToBottom();
       _controller.setUpBlink();
 
-      InputHandler.handleInput(e, _model, stdin, stdout);
+      _inputHandler.handleInput(e, _model, stdout);
     });
 
     _terminal.onMouseWheel.listen((wheelEvent) {
