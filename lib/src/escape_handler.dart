@@ -265,6 +265,7 @@ class EscapeHandler {
       attr.resetAll();
     }
 
+    // TODO: implement these when necessary.
     if (decodedEsc.contains(';1')) attr.bright = true;
     if (decodedEsc.contains(';2')) attr.dim = true;
     if (decodedEsc.contains(';4')) attr.underscore = true;
