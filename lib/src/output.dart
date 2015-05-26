@@ -19,16 +19,16 @@ class OutputHandler {
 
   /// Processes [output] by coordinating handling of strings
   /// and escape parsing.
-  void processStdOut(List<int> output, Controller controller, StreamController stdin, Model model, DisplayAttributes currAttributes, bool resizing) {
+  void processStdOut(List<int> output, Controller controller, StreamController stdin, Model model, DisplayAttributes currAttributes) {
     //print(output.toString());
     int nextEsc;
     while (output.isNotEmpty) {
       nextEsc = output.indexOf(ESC);
       if (nextEsc == -1) {
-        _handleOutString(output, model, controller, currAttributes, resizing);
+        _handleOutString(output, model, controller, currAttributes);
         return;
       } else {
-        _handleOutString(output.sublist(0, nextEsc),  model, controller, currAttributes, resizing);
+        _handleOutString(output.sublist(0, nextEsc),  model, controller, currAttributes);
         output = _parseEscape(output.sublist(nextEsc), controller, stdin, model, currAttributes);
       }
     }
@@ -54,7 +54,7 @@ class OutputHandler {
 
   /// Appends a new [SpanElement] with the contents of [_outString]
   /// to the [_buffer] and updates the display.
-  void _handleOutString(List<int> string, Model model, Controller controller, DisplayAttributes currAttributes, bool resizing) {
+  void _handleOutString(List<int> string, Model model, Controller controller, DisplayAttributes currAttributes) {
     var codes = UTF8.decode(string).codeUnits;
     for (var code in codes) {
       String char = new String.fromCharCode(code);
@@ -78,8 +78,8 @@ class OutputHandler {
           char = Glyph.AMP;
           break;
         case 10:
-          if (resizing) {
-            resizing = false;
+          if (controller.resizing) {
+            controller.resizing = false;
             continue;
           }
           model.cursorNewLine();

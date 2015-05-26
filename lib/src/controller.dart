@@ -11,6 +11,7 @@ class Controller {
   DivElement cursor;
   Model _model;
   Theme _theme;
+  bool resizing;
   bool cursorBlink = true;
   Timer _blinkTimer, _blinkTimeout;
   bool blinkOn;
@@ -23,6 +24,7 @@ class Controller {
   Controller(this.div, this.cursor, Model model, Theme theme) {
     _model = model;
     _theme = theme;
+    resizing = false;
 
     blinkOn = false;
     setUpBlink();

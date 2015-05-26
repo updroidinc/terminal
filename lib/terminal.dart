@@ -47,8 +47,6 @@ class Terminal {
   DisplayAttributes _currAttributes;
   Theme _theme;
 
-  bool _resizing;
-
   Terminal (this.div) {
     _terminal = _createTerminalOutputDiv();
     _cursor = _createTerminalCursorDiv();
@@ -62,8 +60,6 @@ class Terminal {
     List<int> size = calculateSize();
     _model = new Model(size[0], size[1]);
     _controller = new Controller(_terminal, _cursor, _model, _theme);
-
-    _resizing = false;
 
     _controller.refreshDisplay();
 
@@ -82,7 +78,7 @@ class Terminal {
     // User expects the prompt to appear after a resize.
     // Sending a \n results in a blank line above the first
     // prompt, so we handle this special case with a flag.
-    _resizing = true;
+    _controller.resizing = true;
     stdin.add([10]);
   }
 
@@ -127,7 +123,7 @@ class Terminal {
   }
 
   void _registerEventHandlers() {
-    stdout.stream.listen((List<int> out) => _outputHandler.processStdOut(new List.from(out), _controller, stdin, _model, _currAttributes, _resizing));
+    stdout.stream.listen((List<int> out) => _outputHandler.processStdOut(new List.from(out), _controller, stdin, _model, _currAttributes));
 
     _terminal.onKeyDown.listen((e) {
       e.preventDefault();
