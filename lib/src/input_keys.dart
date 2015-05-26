@@ -1,4 +1,4 @@
-part of model;
+part of input;
 
 // Remapping of Dart keyCodes (whatever they really are)
 // to UTF8 integers of their Non-Shift equivalents.

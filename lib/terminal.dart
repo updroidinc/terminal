@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'theme.dart';
 import 'package:terminal/src/model.dart';
+import 'package:terminal/src/input.dart';
 
 /// A class for rendering a terminal emulator in a [DivElement] (param).
 /// [stdout] needs to receive individual UTF8 integers and will handle
@@ -126,7 +127,15 @@ class Terminal {
 
     _terminal.onKeyDown.listen((e) {
       e.preventDefault();
-      _handleInput(e);
+
+      // Deactivate blinking while the user is typing.
+      // Reactivate after an idle period.
+      _controller.cancelBlink();
+      _controller.blinkOn = true;
+      _model.scrollToBottom();
+      _controller.setUpBlink();
+
+      InputHandler.handleInput(e, _model, stdin, stdout);
     });
 
     _terminal.onMouseWheel.listen((wheelEvent) {
@@ -145,94 +154,6 @@ class Terminal {
         stdin.add([i]);
       }
     });
-  }
-
-  Future<bool> _listenForBell() {
-    return stdout.stream.first.then((e) => e.contains(7));
-  }
-
-  /// Handles a given [KeyboardEvent].
-  void _handleInput(KeyboardEvent e) {
-    // Deactivate blinking while the user is typing.
-    // Reactivate after an idle period.
-    _controller.cancelBlink();
-    _controller.blinkOn = true;
-    _model.scrollToBottom();
-    _controller.setUpBlink();
-
-    int key = e.keyCode;
-
-    // Don't let solo modifier keys through (Shift=16, Ctrl=17, Meta=91, Alt=18).
-    if (key == 16 || key == 17 || key == 91 || key == 18) return;
-
-    // Don't let other keys that don't make sense in a vt100 terminal through.
-    // (INSERT=45, PAGEUP=33, PAGEDOWN=34).
-    if (key == 45 || key == 33 || key == 34) return;
-
-    // Special handling of DELETE, HOME, and END keys.
-    // TODO: fix this when xterm emulation is supported.
-    switch (key) {
-      case 46:
-        _handleDeleteKey();
-        return;
-      case 36:
-        _handleHomeKey();
-        return;
-      case 35:
-        _handleEndKey();
-        return;
-    }
-
-    // Arrow keys.
-    if (CURSOR_KEYS_NORMAL.containsKey(key)) {
-      bool normKeys = _model.cursorkeys == CursorkeysMode.NORMAL;
-      stdin.add(normKeys ? CURSOR_KEYS_NORMAL[key] : CURSOR_KEYS_APP[key]);
-      return;
-    }
-
-    // keyCode behaves very oddly.
-    if (!e.shiftKey) {
-      if (NOSHIFT_KEYS.containsKey(key)) {
-        key = NOSHIFT_KEYS[key];
-      }
-    } else {
-      if (SHIFT_KEYS.containsKey(key)) {
-        key = SHIFT_KEYS[key];
-      }
-    }
-
-    // Carriage Return (13) => New Line (10).
-    if (key == 13) key = 10;
-
-    // Ctrl-V, Ctrl-C, Ctrl-Z.
-    if (e.ctrlKey) {
-      if (key == 86) {
-        document.execCommand('paste', null, "");
-        return;
-      }
-      if (key == 67) key = 3;
-      if (key == 90) key = 26;
-    }
-
-    stdin.add([key]);
-  }
-
-  void _handleDeleteKey() {
-    stdin.add([27, 91, 67, 8]);
-  }
-
-  Future _handleHomeKey() async {
-    stdin.add([27, 91, 68]);
-    while (! await _listenForBell()) {
-      stdin.add([27, 91, 68]);
-    }
-  }
-
-  Future _handleEndKey() async {
-    stdin.add([27, 91, 67]);
-    while (! await _listenForBell()) {
-      stdin.add([27, 91, 67]);
-    }
   }
 
   /// Processes [output] by coordinating handling of strings
