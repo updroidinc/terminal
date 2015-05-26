@@ -14,7 +14,10 @@ void main() {
     ..theme = new Theme.SolarizedDark();
 
   List<int> size = term.currentSize();
-  print('Terminal spawned with size: ${size[0]} x ${size[1]}');
+  int rows = size[0];
+  int cols = size[1];
+  print('Terminal spawned with size: $rows x $cols');
+  print('└─> cmdr-pty size should be set to $rows x ${cols - 1}');
 
   initWebSocket('ws://localhost:12061/pty');
 
