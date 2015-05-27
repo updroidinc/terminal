@@ -62,12 +62,13 @@ class InputHandler {
 
     // Ctrl-V, Ctrl-C, Ctrl-Z.
     if (e.ctrlKey) {
+      print(key.toString());
       if (key == 118) {
         document.execCommand('paste', null, "");
         return;
       }
-      if (key == 67) key = 3;
-      if (key == 90) key = 26;
+      if (key == 99) key = 3;
+      if (key == 122) key = 26;
     }
 
     stdin.add([key]);
