@@ -13,23 +13,32 @@ class OutputHandler {
 
   StreamController<List<int>> stdout;
 
+  List<int> _incompleteEscape;
+
   OutputHandler() {
     stdout = new StreamController<List<int>>.broadcast();
+    _incompleteEscape = [];
   }
 
   /// Processes [output] by coordinating handling of strings
   /// and escape parsing.
   void processStdOut(List<int> output, Controller controller, StreamController stdin, Model model, DisplayAttributes currAttributes) {
-    //print(output.toString());
+    //print('incoming output: ' + output.toString());
+
+    // Insert the incompleteEscape from last processing if exists.
+    List<int> outputToProcess = new List.from(_incompleteEscape);
+    _incompleteEscape = [];
+    outputToProcess.addAll(output);
+
     int nextEsc;
-    while (output.isNotEmpty) {
-      nextEsc = output.indexOf(ESC);
+    while (outputToProcess.isNotEmpty) {
+      nextEsc = outputToProcess.indexOf(ESC);
       if (nextEsc == -1) {
-        _handleOutString(output, model, controller, currAttributes);
+        _handleOutString(outputToProcess, model, controller, currAttributes);
         return;
       } else {
-        _handleOutString(output.sublist(0, nextEsc),  model, controller, currAttributes);
-        output = _parseEscape(output.sublist(nextEsc), controller, stdin, model, currAttributes);
+        _handleOutString(outputToProcess.sublist(0, nextEsc),  model, controller, currAttributes);
+        outputToProcess = _parseEscape(outputToProcess.sublist(nextEsc), controller, stdin, model, currAttributes);
       }
     }
   }
@@ -39,6 +48,7 @@ class OutputHandler {
   List<int> _parseEscape(List<int> output, Controller controller, StreamController stdin, Model model, DisplayAttributes currAttributes) {
     List<int> escape;
     int termIndex;
+
     for (int i = 1; i <= output.length; i++) {
       termIndex = i;
       escape = output.sublist(0, i);
@@ -46,15 +56,18 @@ class OutputHandler {
       bool escapeHandled = EscapeHandler.handleEscape(escape, stdin, model, currAttributes);
       if (escapeHandled) {
         controller.refreshDisplay();
-        break;
+        return output.sublist(termIndex);
       }
     }
-    return output.sublist(termIndex);
+
+    _incompleteEscape = new List.from(output);
+    return [];
   }
 
   /// Appends a new [SpanElement] with the contents of [_outString]
   /// to the [_buffer] and updates the display.
   void _handleOutString(List<int> string, Model model, Controller controller, DisplayAttributes currAttributes) {
+    //print('string: ' + string.toString());
     var codes = UTF8.decode(string).codeUnits;
     for (var code in codes) {
       String char = new String.fromCharCode(code);
