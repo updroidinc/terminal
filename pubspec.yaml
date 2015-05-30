@@ -7,5 +7,5 @@ homepage: www.github.com/updroidinc/terminal
 environment:
   sdk: ^1.9.3
 dependencies:
-  browser: any
-  quiver: any
+  browser: ^0.10.0
+  quiver: ^0.21.3
