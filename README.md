@@ -24,6 +24,8 @@ See example/ for more details.
 Pull requests welcome! Though, I reserve the right to review and/or reject them at will.
 Can also file issues with the issue tracker.
 
+I prefer commit messages to start with the library/component mostly affected by the commit, but this style isn't required for contributions.
+
 ### TODO:
 
 - Add support for vt102, xterm.
