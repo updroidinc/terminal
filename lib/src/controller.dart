@@ -61,7 +61,12 @@ class Controller {
   }
 
   void _drawCursor() {
-    cursor.style.visibility = blinkOn ? 'visible' : 'hidden';
+    if (document.activeElement == div) {
+      cursor.style.visibility = blinkOn ? 'visible' : 'hidden';
+    } else {
+      cursor.style.visibility = 'visible';
+    }
+
     cursor.style.color = _theme.colors['white'];
     // TODO: make offset calculation dynamic.
     cursor.style.left = ((_model.cursor.col * _theme.charWidth) + 5).toString() + 'px';
