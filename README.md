@@ -4,7 +4,7 @@ A terminal emulator written in Dart.
 
 Connect its I/O to a WebSocket or whatever you like. Originally developed for use with [cmdr-pty] in [UpDroid Commander].
 
-[Imgur](http://i.imgur.com/Bz8St7a.gifv)
+![Imgur](http://i.imgur.com/Bz8St7a.gif)
 
 ## Usage
 
