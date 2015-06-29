@@ -40,5 +40,5 @@ I prefer commit messages to start with the library/component mostly affected by 
 Heavily inspired by the [term.js] project by (chjj) Christopher Jeffrey. But I needed a more flexible, native-Dart implementation for [UpDroid Commander].
 
 [cmdr-pty]: https://github.com/updroidinc/cmdr-pty/
-[UpDroid Commander]: http://updroid.com/commander/
+[UpDroid Commander]: http://updroid.com/upcom/
 [term.js]: https://github.com/chjj/term.js/
