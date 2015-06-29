@@ -5,12 +5,14 @@ import 'package:terminal/terminal.dart';
 import 'package:terminal/theme.dart';
 
 WebSocket ws;
-InputElement addrInput;
+InputElement address;
+ButtonElement connect;
 SpanElement status;
 Terminal term;
 
 void main() {
-  addrInput = querySelector('#address-input');
+  address = querySelector('#address');
+  connect = querySelector('#connect');
   status = querySelector('#status');
 
   term = new Terminal(querySelector('#console'))
@@ -24,10 +26,11 @@ void main() {
   print('Terminal spawned with size: $rows x $cols');
   print('└─> cmdr-pty size should be set to $rows x ${cols - 1}');
 
-  querySelector('#connect-button').onClick.listen((_) {
-    if (ws != null && ws.readyState == WebSocket.OPEN) ws.close();
-    initWebSocket('ws://${addrInput.value}/pty');
-  });
+  address.onKeyPress
+  .where((e) => e.keyCode == KeyCode.ENTER)
+  .listen((_) => restartWebsocket());
+
+  connect.onClick.listen((_) => restartWebsocket());
 
   // Terminal input.
   term.stdin.stream.listen((data) {
@@ -45,6 +48,13 @@ void updateStatusDisconnect() {
   status.classes.remove('connected');
   status.text = 'Disconnected';
   print('Terminal disconnected due to CLOSE.');
+}
+
+void restartWebsocket() {
+  if (address.value == '') return;
+
+  if (ws != null && ws.readyState == WebSocket.OPEN) ws.close();
+  initWebSocket('ws://${address.value}/pty');
 }
 
 void initWebSocket(String url, [int retrySeconds = 2]) {

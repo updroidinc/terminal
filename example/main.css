@@ -1,4 +1,4 @@
-button {
+#connect {
   margin-left: 2px;
   margin-right: 2px;
   margin-bottom: 2px;
@@ -16,7 +16,6 @@ button {
   position: relative;
   width: 542px;
   height: 360px;
-  border: 1px solid #dddddd;
   overflow-y: hidden;
   overflow-x: hidden;
 }
