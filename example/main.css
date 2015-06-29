@@ -1,3 +1,17 @@
+button {
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-bottom: 2px;
+}
+
+#status {
+  color: red;
+}
+
+#status.connected {
+  color: green;
+}
+
 .console {
   position: relative;
   width: 542px;

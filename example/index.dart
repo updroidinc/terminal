@@ -5,9 +5,14 @@ import 'package:terminal/terminal.dart';
 import 'package:terminal/theme.dart';
 
 WebSocket ws;
+InputElement addrInput;
+SpanElement status;
 Terminal term;
 
 void main() {
+  addrInput = querySelector('#address-input');
+  status = querySelector('#status');
+
   term = new Terminal(querySelector('#console'))
     ..scrollSpeed = 3
     ..cursorBlink = true
@@ -19,7 +24,10 @@ void main() {
   print('Terminal spawned with size: $rows x $cols');
   print('└─> cmdr-pty size should be set to $rows x ${cols - 1}');
 
-  initWebSocket('ws://localhost:12061/pty');
+  querySelector('#connect-button').onClick.listen((_) {
+    if (ws != null && ws.readyState == WebSocket.OPEN) ws.close();
+    initWebSocket('ws://${addrInput.value}/pty');
+  });
 
   // Terminal input.
   term.stdin.stream.listen((data) {
@@ -27,31 +35,39 @@ void main() {
   });
 }
 
+void updateStatusConnect() {
+  status.classes.add('connected');
+  status.text = 'Connected';
+  print('Terminal connected to server with status ${ws.readyState}.');
+}
+
+void updateStatusDisconnect() {
+  status.classes.remove('connected');
+  status.text = 'Disconnected';
+  print('Terminal disconnected due to CLOSE.');
+}
+
 void initWebSocket(String url, [int retrySeconds = 2]) {
-    bool encounteredError = false;
+  bool encounteredError = false;
 
-    ws = new WebSocket(url);
-    ws.binaryType = "arraybuffer";
+  ws = new WebSocket(url);
+  ws.binaryType = "arraybuffer";
 
-    ws.onOpen.listen((e) {
-      print('Terminal connected to server with status ${ws.readyState}.');
-    });
+  ws.onOpen.listen((e) => updateStatusConnect());
 
-    // Terminal output.
-    ws.onMessage.listen((e) {
-      ByteBuffer buf = e.data;
-      term.stdout.add(buf.asUint8List());
-    });
+  // Terminal output.
+  ws.onMessage.listen((e) {
+    ByteBuffer buf = e.data;
+    term.stdout.add(buf.asUint8List());
+  });
 
-    ws.onClose.listen((e) {
-      print('Terminal disconnected due to CLOSE.');
-    });
+  ws.onClose.listen((e) => updateStatusDisconnect());
 
-    ws.onError.listen((e) {
-      print('Terminal disconnected due to ERROR. Retrying...');
-      if (!encounteredError) {
-        new Timer(new Duration(seconds:retrySeconds), () => initWebSocket(url, 4));
-      }
-      encounteredError = true;
-    });
-  }
+  ws.onError.listen((e) {
+    print('Terminal disconnected due to ERROR. Retrying...');
+    if (!encounteredError) {
+      new Timer(new Duration(seconds:retrySeconds), () => initWebSocket(url, 4));
+    }
+    encounteredError = true;
+  });
+}

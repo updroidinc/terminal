@@ -8,10 +8,15 @@
     <link rel="stylesheet" href="main.css">
   </head>
 
-  <div id="console" class="console"></div>
-
   <body>
-    <p id="text"></p>
+    <span>
+      <input id="address-input" placeholder="localhost:">
+      <button id="connect-button">Connect</button>
+      <span id="status">Disconnected</span>
+    </span>
+
+    <div id="console" class="console"></div>
+
     <script type="application/dart" src="index.dart"></script>
     <!-- for this next line to work, your pubspec.yaml file must have a dependency on 'browser' -->
     <script src="packages/browser/dart.js"></script>
