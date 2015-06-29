@@ -44,10 +44,10 @@ void updateStatusConnect() {
   print('Terminal connected to server with status ${ws.readyState}.');
 }
 
-void updateStatusDisconnect() {
+void updateStatusDisconnect(Event e) {
   status.classes.remove('connected');
   status.text = 'Disconnected';
-  print('Terminal disconnected due to CLOSE.');
+  print('Terminal disconnected with status ${ws.readyState}.');
 }
 
 void restartWebsocket() {
@@ -58,8 +58,6 @@ void restartWebsocket() {
 }
 
 void initWebSocket(String url, [int retrySeconds = 2]) {
-  bool encounteredError = false;
-
   ws = new WebSocket(url);
   ws.binaryType = "arraybuffer";
 
@@ -71,13 +69,6 @@ void initWebSocket(String url, [int retrySeconds = 2]) {
     term.stdout.add(buf.asUint8List());
   });
 
-  ws.onClose.listen((e) => updateStatusDisconnect());
-
-  ws.onError.listen((e) {
-    print('Terminal disconnected due to ERROR. Retrying...');
-    if (!encounteredError) {
-      new Timer(new Duration(seconds:retrySeconds), () => initWebSocket(url, 4));
-    }
-    encounteredError = true;
-  });
+  ws.onClose.listen((e) => updateStatusDisconnect(e));
+  ws.onError.listen((e) => updateStatusDisconnect(e));
 }
