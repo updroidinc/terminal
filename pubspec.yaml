@@ -9,3 +9,4 @@ environment:
 dependencies:
   browser: ^0.10.0
   quiver: ^0.21.3
+  http_server: ^0.9.5

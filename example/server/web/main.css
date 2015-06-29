@@ -1,0 +1,43 @@
+#status {
+  color: red;
+}
+
+#status.connected {
+  color: green;
+}
+
+.console {
+  position: relative;
+  width: 542px;
+  height: 360px;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+.terminal-output,
+.terminal-cursor {
+  display: inline-block;
+  font-size: 11px;
+  font-family: "DejaVu Sans Mono", "Liberation Mono", "Andale Mono", monospace;
+}
+
+.terminal-output {
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  padding: 5px;
+}
+
+.terminal-output:focus {
+  outline: none;
+}
+
+.terminal-cursor {
+  position: absolute;
+  width: calc(299px / 45);
+  height: 14px;
+  background-color: transparent;
+}
+
+.termrow {
+  height: 14px;
+}
