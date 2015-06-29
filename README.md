@@ -4,6 +4,8 @@ A terminal emulator written in Dart.
 
 Connect its I/O to a WebSocket or whatever you like. Originally developed for use with [cmdr-pty] in [UpDroid Commander].
 
+[Imgur](http://i.imgur.com/Bz8St7a.gifv)
+
 ## Usage
 
 Terminal's only parameter is a DivElement - essentially a box that Terminal will be rendered in.
