@@ -6,13 +6,14 @@ import 'package:terminal/theme.dart';
 
 WebSocket ws;
 InputElement address;
-ButtonElement connect;
+ButtonElement connect, invert;
 SpanElement status;
 Terminal term;
 
 void main() {
   address = querySelector('#address');
   connect = querySelector('#connect');
+  invert = querySelector('#invert');
   status = querySelector('#status');
 
   term = new Terminal(querySelector('#console'))
@@ -31,6 +32,7 @@ void main() {
   .listen((_) => restartWebsocket());
 
   connect.onClick.listen((_) => restartWebsocket());
+  invert.onClick.listen((_) => invertTheme());
 
   // Terminal input.
   term.stdin.stream.listen((data) {
@@ -80,4 +82,8 @@ void initWebSocket(String url, [int retrySeconds = 2]) {
     }
     encounteredError = true;
   });
+}
+
+void invertTheme() {
+  term.theme = term.theme.name == 'solarized-light' ? new Theme.SolarizedDark() : new Theme.SolarizedLight();
 }
