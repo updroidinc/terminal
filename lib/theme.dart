@@ -5,7 +5,7 @@ library theme.dart;
 class Theme {
   String name;
   Map colors;
-  String backgroundColor;
+  String foregroundColor, backgroundColor;
 
   // Manually calculated via trial-and-error.
   double charWidth = 299 / 45;
@@ -24,7 +24,8 @@ class Theme {
       'white'   : '#93a1a1'
     };
 
-    backgroundColor = '#002b36';
+    foregroundColor = colors['white'];
+    backgroundColor = colors['black'];
   }
 
   Theme.SolarizedLight() {
@@ -40,6 +41,7 @@ class Theme {
       'white'   : '#586e75'
     };
 
-    backgroundColor = '#fdf6e3';
+    foregroundColor = colors['white'];
+    backgroundColor = colors['black'];
   }
 }
