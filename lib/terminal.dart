@@ -35,7 +35,10 @@ class Terminal {
   /// Returns current [Theme].
   Theme get theme => _controller.theme;
   /// Sets a [Terminal]'s [Theme]. Default: Solarized-Dark.
-  void set theme(Theme thm) => _controller.setTheme(thm);
+  void set theme(Theme thm) {
+    _theme = thm;
+    _controller.setTheme(thm);
+  }
 
   // Private
   Model _model;

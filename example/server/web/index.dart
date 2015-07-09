@@ -6,7 +6,7 @@ import 'package:terminal/theme.dart';
 
 WebSocket ws;
 InputElement address;
-ButtonElement connect;
+ButtonElement connect, invert;
 SpanElement status;
 Terminal term;
 
@@ -26,8 +26,12 @@ void main() {
   print('Terminal spawned with size: $rows x $cols');
   print('└─> cmdr-pty size should be set to $rows x ${cols - 1}');
 
-  if (ws != null && ws.readyState == WebSocket.OPEN) ws.close();
-  initWebSocket('ws://${window.location.host}/pty');
+  address.onKeyPress
+  .where((e) => e.keyCode == KeyCode.ENTER)
+  .listen((_) => restartWebsocket());
+
+  connect.onClick.listen((_) => restartWebsocket());
+  invert.onClick.listen((_) => invertTheme());
 
   // Terminal input.
   term.stdin.stream.listen((data) {
@@ -45,6 +49,13 @@ void updateStatusDisconnect() {
   status.classes.remove('connected');
   status.text = 'Disconnected';
   print('Terminal disconnected due to CLOSE.');
+}
+
+void restartWebsocket() {
+  if (address.value == '') return;
+
+  if (ws != null && ws.readyState == WebSocket.OPEN) ws.close();
+  initWebSocket('ws://${address.value}/pty');
 }
 
 void initWebSocket(String url, [int retrySeconds = 2]) {
