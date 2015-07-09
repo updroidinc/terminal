@@ -48,8 +48,8 @@ void updateStatusDisconnect() {
 
 void restartWebsocket() {
   if (ws != null && ws.readyState == WebSocket.OPEN) ws.close();
-  String url = window.location.host;
-  initWebSocket('ws://$url/pty');
+  String url = window.location.host.split(':')[0];
+  initWebSocket('ws://$url:8080/pty');
 }
 
 void initWebSocket(String url, [int retrySeconds = 2]) {
