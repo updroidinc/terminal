@@ -1,3 +1,5 @@
+#!/usr/bin/env dart
+
 import 'dart:io';
 import 'dart:convert';
 
@@ -37,7 +39,7 @@ void routeRequest(HttpRequest request) {
 
 /// Returns a [VirtualDirectory] set up with a path from [results].
 VirtualDirectory getVirDir() {
-  String guiPath = '${Directory.current.path}/web';
+  String guiPath = '${Directory.current.path}/example/server/web';
   VirtualDirectory virDir = new VirtualDirectory(Platform.script.resolve(guiPath).toFilePath())
     ..allowDirectoryListing = true
     ..followLinks = true
@@ -93,8 +95,7 @@ void startPty() {
 /// Manages the IO between websocket and socket for the terminal.
 void handleIO(Socket s) {
   socket = s;
-
-  print('pty connected to: ${socket.remoteAddress.address}:${socket.remotePort}');
+  print('server example connected to cmdr-pty via: ${socket.remoteAddress.address}:${socket.remotePort}');
 
   // Output from cmdr-pty -> the client connected via websocket.
   socket.listen((data) => websocket.add((data)));
