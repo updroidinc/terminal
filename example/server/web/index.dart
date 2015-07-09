@@ -5,16 +5,13 @@ import 'package:terminal/terminal.dart';
 import 'package:terminal/theme.dart';
 
 WebSocket ws;
-InputElement address;
-ButtonElement connect, invert;
 SpanElement status;
+ButtonElement invert;
 Terminal term;
 
 void main() {
-  address = querySelector('#address');
-  connect = querySelector('#connect');
-  invert = querySelector('#invert');
   status = querySelector('#status');
+  invert = querySelector('#invert');
 
   term = new Terminal(querySelector('#console'))
     ..scrollSpeed = 3
@@ -27,17 +24,14 @@ void main() {
   print('Terminal spawned with size: $rows x $cols');
   print('└─> cmdr-pty size should be set to $rows x ${cols - 1}');
 
-  address.onKeyPress
-  .where((e) => e.keyCode == KeyCode.ENTER)
-  .listen((_) => restartWebsocket());
-
-  connect.onClick.listen((_) => restartWebsocket());
   invert.onClick.listen((_) => invertTheme());
 
   // Terminal input.
   term.stdin.stream.listen((data) {
     ws.sendByteBuffer(new Uint8List.fromList(data).buffer);
   });
+
+  restartWebsocket();
 }
 
 void updateStatusConnect() {
@@ -53,10 +47,9 @@ void updateStatusDisconnect() {
 }
 
 void restartWebsocket() {
-  if (address.value == '') return;
-
   if (ws != null && ws.readyState == WebSocket.OPEN) ws.close();
-  initWebSocket('ws://${address.value}/pty');
+  String url = window.location.host;
+  initWebSocket('ws://$url/pty');
 }
 
 void initWebSocket(String url, [int retrySeconds = 2]) {
@@ -85,5 +78,9 @@ void initWebSocket(String url, [int retrySeconds = 2]) {
 }
 
 void invertTheme() {
-  term.theme = term.theme.name == 'solarized-light' ? new Theme.SolarizedDark() : new Theme.SolarizedLight();
+  if (term.theme.name == 'solarized-dark') {
+    term.theme = new Theme.SolarizedLight();
+  } else {
+    term.theme = new Theme.SolarizedDark();
+  }
 }

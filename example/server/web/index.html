@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>index</title>
+  <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+<span>
+  <button id="invert">Invert</button>
+  <span id="status">Disconnected</span>
+</span>
+
+<div id="console" class="console"></div>
+
+<script type="application/dart" src="index.dart"></script>
+<!-- for this next line to work, your pubspec.yaml file must have a dependency on 'browser' -->
+<script src="packages/browser/dart.js"></script>
+</body>
+</html>
