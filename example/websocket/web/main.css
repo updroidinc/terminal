@@ -1,9 +1,15 @@
-#connect,
-#invert {
+#invert,
+#connect {
+  display: inline;
   margin: 2px;
 }
 
+#invert {
+  margin-left: 0;
+}
+
 #status {
+  display: inline;
   color: red;
 }
 
