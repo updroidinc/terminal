@@ -57,6 +57,8 @@ class Model {
 
   Model.fromOldModel(this.numRows, this.numCols, Model oldModel) {
     cursor = new Cursor();
+    keypad = oldModel.keypad;
+    cursorkeys = oldModel.cursorkeys;
 
     oldModel.scrollToBottom();
     // Puts all old content into the reverse buffer and starts clean.
