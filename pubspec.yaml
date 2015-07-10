@@ -2,7 +2,7 @@ name: terminal
 version: 0.1.1
 authors:
 - Mike Lewis <mike@updroid.com>
-description: A terminal emulator written in Dart. Connect its I/O to a WebSocket or whatever you like. Originally developed for use in UpDroid Commander.
+description: A terminal emulator written in Dart. Connect its I/O to a WebSocket or whatever you like.
 homepage: https://www.github.com/updroidinc/terminal
 environment:
   sdk: '>=1.9.3 <2.0.0'
