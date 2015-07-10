@@ -8,8 +8,11 @@ class Theme {
   String foregroundColor, backgroundColor;
 
   // Manually calculated via trial-and-error.
-  double charWidth = 299 / 45;
-  int charHeight = 14;
+  // TODO: make the character size customizable.
+  final double charWidth = 299 / 45;
+  final int charHeight = 14;
+
+  Theme(this.name, this.colors, this.foregroundColor, this.backgroundColor);
 
   Theme.SolarizedDark() {
     name = 'solarized-dark';
