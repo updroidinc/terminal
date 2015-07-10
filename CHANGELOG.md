@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.1.2
+
+- Added another example to demonstrate alternate usage (with a webserver)
+- Updated README with example usage
+- Added 'invert' button to examples for toggling the built-in theme
+- Fixed bug with Theme not getting set properly
+- Fixed bug with some states not being carried over between models
+- Added a default constructor for Theme to pass in custom attributes
+
 ## v0.1.1
 
 - Fixed cursor blinking even when the terminal is not focused
