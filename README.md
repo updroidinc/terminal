@@ -10,13 +10,27 @@ Connect its I/O to a WebSocket or whatever you like. Originally developed for us
 
 Terminal's only parameter is a DivElement - essentially a box that Terminal will be rendered in.
 
-The major components are the I/O streams. They are expected to be hooked up to ByteBuffers of Uint8Lists. The example provided sets up a WebSocket to a backend [cmdr-pty] that sends/receives data in UTF-8. But it could also be used with text/data that resides solely in the browser application.
+The major components are the I/O streams. They are expected to be hooked up to ByteBuffers of Uint8Lists. Best used by hooking up to a backend, like [cmdr-pty], that sends/receives data in UTF-8. But it could also be used with text/data that resides solely in the browser application.
 
 Theme is a separate library that contains built-in color schemes.
 
 There are other options like scroll speed, cursor blink, and the theme.
 
 See example/ for more details.
+
+## Examples
+
+There are two examples, found in the example/ dir. Both of these require Dartium (special Dart-enabled build of Chromium) unless you know how to compile the examples using dart2js (you're on your own for that).
+
+### Server
+
+Run `dart /path/to/example/server/main.dart`. A webserver will begin running, then you may open Dartium and point it to "localhost:8080". This example demonstrates how to build a server application that serves a Terminal client application and also connects this client to a pty backend [cmdr-pty] via TCP socket.
+
+### Websocket
+
+Requires [cmdr-pty]. Follow the directions to run cmdr-pty in a regular terminal - the default settings should be fine. Then run your own webserver on example/websocket/web/index.html. You can use an IDE like DartEditor or WebStorm, or possibly Dartium itself.
+
+This example demonstrates how to build a client-side-only Terminal application that connects directly to a pty backend via Websocket.
 
 ## Known Issues
 
