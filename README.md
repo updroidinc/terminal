@@ -8,6 +8,8 @@ Connect its I/O to a WebSocket or whatever you like. Originally developed for us
 
 ## Package Usage
 
+***Tested with Dart 1.10.1***
+
 Terminal's only parameter is a DivElement - essentially a box that Terminal will be rendered in.
 
 The major components are the I/O streams. They are expected to be hooked up to ByteBuffers of Uint8Lists. Best used by hooking up to a backend, like [cmdr-pty], that sends/receives data in UTF-8. But it could also be used with text/data that resides solely in the browser application.
