@@ -1,9 +1,9 @@
-library input;
+library terminal.src.input.input;
 
 import 'dart:html';
 import 'dart:async';
 
-import 'package:terminal/src/model.dart';
+import '../model/model.dart';
 
 part 'input_keys.dart';
 
