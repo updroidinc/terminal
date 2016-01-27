@@ -68,6 +68,7 @@ I prefer commit messages to start with the library/component mostly affected by 
 - Improve performance.
 - More themes.
 - Upgrade supported SDK version to 1.13.x.
+  - Add dartfmt to [git pre-commit hook].
 - Unit tests.
 
 ## Acknowledgements
@@ -78,3 +79,4 @@ Heavily inspired by the [term.js] project by (chjj) Christopher Jeffrey. But I n
 [UpDroid Commander]: http://updroid.com/upcom/
 [term.js]: https://github.com/chjj/term.js/
 [http-server]: https://www.npmjs.com/package/http-server
+[git pre-commit hook]: http://blog.sethladd.com/2015/04/formatting-dart-code-before-every-git.html
