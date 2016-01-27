@@ -5,7 +5,7 @@ authors:
 description: A terminal emulator written in Dart. Connect its I/O to a WebSocket or whatever you like.
 homepage: https://www.github.com/updroidinc/terminal
 environment:
-  sdk: '>=1.9.3 <2.0.0'
+  sdk: ^1.10.1
 dependencies:
   browser: ^0.10.0
   quiver: ^0.21.3
