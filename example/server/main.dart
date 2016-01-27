@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:http_server/http_server.dart';
+import 'package:path/path.dart' as path;
 
 Process pty;
 Socket socket;
@@ -37,10 +38,11 @@ void routeRequest(HttpRequest request) {
   });
 }
 
-/// Returns a [VirtualDirectory] set up with a path from [results].
+/// Returns a [VirtualDirectory] set up with a path to the web directory.
 VirtualDirectory getVirDir() {
-  String guiPath = '${Directory.current.path}/example/server/web';
-  VirtualDirectory virDir = new VirtualDirectory(Platform.script.resolve(guiPath).toFilePath())
+  String guiPath = path.join(path.dirname(Platform.script.toFilePath()), 'web');
+
+  VirtualDirectory virDir = new VirtualDirectory(guiPath)
     ..allowDirectoryListing = true
     ..followLinks = true
     ..jailRoot = false;
