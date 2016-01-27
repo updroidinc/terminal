@@ -63,8 +63,12 @@ I prefer commit messages to start with the library/component mostly affected by 
 
 ### TODO:
 
-- Add support for vt102, xterm.
-- Move Terminal's styling into code for self-containment and improve flexibility.
+- Support for vt102, xterm.
+- Add resizing to the example clients.
+- Improve performance.
+- More themes.
+- Upgrade supported SDK version to 1.13.x.
+- Unit tests.
 
 ## Acknowledgements
 
