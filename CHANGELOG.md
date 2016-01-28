@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.3
+
+- Fixed crash when server is not run from the project root
+- README updates
+- Organizational changes
+
 ## v0.1.2
 
 - Added another example to demonstrate alternate usage (with a webserver)
