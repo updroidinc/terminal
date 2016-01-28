@@ -1,10 +1,10 @@
-library controller;
+library terminal.src.controller;
 
 import 'dart:async';
 import 'dart:html';
 
-import 'package:terminal/theme.dart';
-import 'package:terminal/src/model.dart';
+import 'theme.dart';
+import 'model/model.dart';
 
 class Controller {
   DivElement div;

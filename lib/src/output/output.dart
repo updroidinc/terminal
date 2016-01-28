@@ -1,10 +1,10 @@
-library output;
+library terminal.src.output.output;
 
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:terminal/src/model.dart';
-import 'package:terminal/src/controller.dart';
+import '../model/model.dart';
+import '../controller.dart';
 
 part 'escape_handler.dart';
 
